@@ -8,6 +8,13 @@ public class Field
     [SerializeField]
     public Item[][] items;
 
+    public Item[] this[int i]
+    {
+        get { return items[i]; }
+        set { items[i] = value; }
+    }
+    public int Length { get { return items.Length; } }
+
     public Field(int width, int height)
     {
         items = new Item[height][];
@@ -20,9 +27,9 @@ public class Field
             }
         }
     }
-
     public Field(int size) : this(size,size) {}
     public Field() : this(8) { }
+
 
     override public string ToString()
     {
@@ -58,9 +65,12 @@ public class Field
 
     public void SwitchItems(Vector2 from, Vector2 to)
     {
+        Debug.Log("Switched items " + from + " " + to);
         //todo checks
         Item item = items[(int)to.y][(int)to.x];
         items[(int)to.y][(int)to.x] = items[(int)from.y][(int)from.x];
         items[(int)to.y][(int)to.x] = item;
+        items[(int)to.y][(int)to.x].movedTo?.Invoke((int)from.x, (int)from.y);
+        items[(int)from.y][(int)from.x].movedTo?.Invoke((int)to.x, (int)to.y);
     }
 }

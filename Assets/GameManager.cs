@@ -4,13 +4,21 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    public static GameManager instance;
     public Field field;
 
-    // Start is called before the first frame update
-    void Start()
+    public Vector2 selectedItem;
+
+    private void Awake()
     {
+        instance = this;
+
         field = new Field();
         Debug.Log(field.ToString());
+    }
+
+    void Start()
+    {
         
     }
 
@@ -18,5 +26,17 @@ public class GameManager : MonoBehaviour
     void Update()
     {
         
+    }
+
+    public void SelectItem(Vector2 coord)
+    {
+        Debug.Log("Selected "+coord);
+        if (Vector2.Distance(selectedItem, coord) > 1)
+            selectedItem = coord;
+        else
+        {
+            field.SwitchItems(selectedItem, coord);
+            selectedItem = new Vector2(-1, -1);
+        }
     }
 }
