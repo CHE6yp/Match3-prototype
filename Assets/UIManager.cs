@@ -7,6 +7,8 @@ public class UIManager : MonoBehaviour
     public Canvas canvas;
     public RectTransform panel;
     public GameObject buttonPrefab;
+    public GameObject selectedButton;
+    
 
     // Start is called before the first frame update
     void Start()
@@ -37,7 +39,18 @@ public class UIManager : MonoBehaviour
         buttonTemp.transform.GetChild(0).GetComponent<Text>().color = Color.white;
 
         buttonTemp.GetComponent<Image>().color = item.GetColor();
-        buttonTemp.GetComponent<Button>().onClick.AddListener(() => { GameManager.instance.SelectItem(item); });
+        buttonTemp.GetComponent<Button>().onClick.AddListener(() => {
+            if (selectedButton != null) selectedButton.GetComponent<Outline>().enabled = false;
+            if (!GameManager.instance.SelectItem(item))
+            {
+                selectedButton = buttonTemp;
+                buttonTemp.GetComponent<Outline>().enabled = true;
+            }
+            else
+            {
+                selectedButton = null;
+            }
+        });
         item.movedTo += (coordinates) => { MoveTo(buttonTemp.transform, coordinates); };
     }
 

@@ -29,16 +29,20 @@ public class GameManager : MonoBehaviour
         
     }
 
-    public void SelectItem(Item item)
+    public bool SelectItem(Item item)
     {
         Debug.Log("Selected "+item.coordinates);
         Debug.Log(selectedItem);
         if (selectedItem == null || selectedItem == item || Vector2.Distance(selectedItem.coordinates, item.coordinates) > 1)
+        {
             selectedItem = item;
+            return false;
+        }
         else
         {
             field.SwitchItems(selectedItem, item);
             selectedItem = null;
+            return true;
         }
     }
 }

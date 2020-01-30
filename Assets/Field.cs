@@ -72,11 +72,8 @@ public class Field
     {
         Debug.Log("Switched items " + from + " " + to);
         Vector2 temp = from.coordinates;
-        from.coordinates = to.coordinates;
-        to.coordinates = temp;
-
-        from.movedTo?.Invoke(from.coordinates);
-        to.movedTo?.Invoke(to.coordinates);
+        from.MoveTo(to.coordinates);
+        to.MoveTo(temp);
         //todo checks
         /*
         Item item = items[(int)to.y][(int)to.x];

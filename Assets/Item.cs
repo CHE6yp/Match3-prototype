@@ -51,5 +51,11 @@ public class Item
             case "E": return Color.magenta;
         }
     }
+
+    public void MoveTo(Vector2 coord)
+    {
+        coordinates = coord;
+        movedTo?.Invoke(coordinates);
+    }
     
 }
