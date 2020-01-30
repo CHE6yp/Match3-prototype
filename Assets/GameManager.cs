@@ -7,14 +7,15 @@ public class GameManager : MonoBehaviour
     public static GameManager instance;
     public Field field;
 
-    public Vector2 selectedItem;
+    public Item selectedItem;
 
     private void Awake()
     {
+        selectedItem = null;
         instance = this;
 
         field = new Field();
-        Debug.Log(field.ToString());
+        Debug.Log(field);
     }
 
     void Start()
@@ -28,15 +29,16 @@ public class GameManager : MonoBehaviour
         
     }
 
-    public void SelectItem(Vector2 coord)
+    public void SelectItem(Item item)
     {
-        Debug.Log("Selected "+coord);
-        if (Vector2.Distance(selectedItem, coord) > 1)
-            selectedItem = coord;
+        Debug.Log("Selected "+item.coordinates);
+        Debug.Log(selectedItem);
+        if (selectedItem == null || selectedItem == item || Vector2.Distance(selectedItem.coordinates, item.coordinates) > 1)
+            selectedItem = item;
         else
         {
-            field.SwitchItems(selectedItem, coord);
-            selectedItem = new Vector2(-1, -1);
+            field.SwitchItems(selectedItem, item);
+            selectedItem = null;
         }
     }
 }

@@ -5,6 +5,7 @@ using UnityEngine.UI;
 public class UIManager : MonoBehaviour
 {
     public Canvas canvas;
+    public RectTransform panel;
     public GameObject buttonPrefab;
 
     // Start is called before the first frame update
@@ -21,35 +22,29 @@ public class UIManager : MonoBehaviour
 
     public void DrawField()
     {
-        for (int i = 0; i < GameManager.instance.field.Length; i++)
+        foreach (Item item in GameManager.instance.field.items)
         {
-            for (int k = 0; k < GameManager.instance.field[i].Length; k++)
-            {
-                SetupItemButton(k, i);
-            }
+            SetupItemButton(item);
         }
     }
 
-    void SetupItemButton(int x, int y)
+    void SetupItemButton(Item item)
     {
-        GameObject buttonTemp = Instantiate(buttonPrefab, new Vector3(
-                    x * 30 + canvas.GetComponent<RectTransform>().rect.width / 2,
-                    y * 30 + canvas.GetComponent<RectTransform>().rect.height / 2,
-                    0),
-                    Quaternion.identity, canvas.transform);
-        buttonTemp.transform.GetChild(0).GetComponent<Text>().text = GameManager.instance.field[y][x].type;
+        GameObject buttonTemp = Instantiate(buttonPrefab, panel);
+        buttonTemp.GetComponent<RectTransform>().anchoredPosition = item.coordinates*30;
+
+        buttonTemp.transform.GetChild(0).GetComponent<Text>().text = item.type;
         buttonTemp.transform.GetChild(0).GetComponent<Text>().color = Color.white;
 
-        buttonTemp.GetComponent<Image>().color = GameManager.instance.field[y][x].GetColor();
-        buttonTemp.GetComponent<Button>().onClick.AddListener(() => { GameManager.instance.SelectItem(new Vector2(x, y)); });
-        GameManager.instance.field[y][x].movedTo += (xc,yc) => { MoveTo(buttonTemp.transform, xc, yc); };
-
+        buttonTemp.GetComponent<Image>().color = item.GetColor();
+        buttonTemp.GetComponent<Button>().onClick.AddListener(() => { GameManager.instance.SelectItem(item); });
+        item.movedTo += (coordinates) => { MoveTo(buttonTemp.transform, coordinates); };
     }
 
-    public void MoveTo(Transform tr, int x, int y)
+    public void MoveTo(Transform tr, Vector2 coordinates)
     {
-        Debug.Log("moved to " + x + "/" + y);
-        tr.position = new Vector3(x * 30 + canvas.GetComponent<RectTransform>().rect.width / 2, y * 30 + canvas.GetComponent<RectTransform>().rect.height / 2);
+        Debug.Log("moved to " + coordinates);
+        //tr.position = new Vector3(x * 30 + canvas.GetComponent<RectTransform>().rect.width / 2, y * 30 + canvas.GetComponent<RectTransform>().rect.height / 2);
+        tr.GetComponent<RectTransform>().anchoredPosition = coordinates*30;
     }
-
 }

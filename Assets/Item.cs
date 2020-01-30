@@ -11,14 +11,20 @@ public class Item
     public bool frozen;
 
     public Vector2 coordinates;
-    public delegate void CoordAction(int x, int y);
+    public delegate void CoordAction(Vector2 coordinates);
     public CoordAction movedTo;
     
-
     public Item(string t)
     {
         type = t;
         frozen = false;
+    }
+
+    public Item(string t, Vector2 coord)
+    {
+        type = t;
+        frozen = false;
+        coordinates = coord;
     }
 
     public Item(string t, bool f)

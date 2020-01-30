@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,24 +7,28 @@ using UnityEngine;
 public class Field
 {
     [SerializeField]
-    public Item[][] items;
+    public List<Item> items;
+    public int width;
+    public int height;
 
-    public Item[] this[int i]
+    public Item this[int x, int y]
     {
-        get { return items[i]; }
-        set { items[i] = value; }
+        get { return items.Where(a=>a.coordinates == new Vector2(x,y)).First(); }
+        //set { items.Where(a=>a.coordinates == new Vector2(x, y)) = value; }
     }
-    public int Length { get { return items.Length; } }
+    //public int Length { get { return items.Length; } }
 
     public Field(int width, int height)
     {
-        items = new Item[height][];
-        for (int i = 0; i < height; i++)
+        this.width = width;
+        this.height = height;
+        items = new List<Item>();
+
+        for (int y = 0; y < height; y++)
         {
-            items[i] = new Item[width];
-            for (int k = 0; k < width; k++)
+            for (int x = 0; x < width; x++)
             {
-                items[i][k] = CreateItem(Random.Range(0, 5));
+                items.Add(CreateItem(Random.Range(0, 5),new Vector2(x,y)));
             }
         }
     }
@@ -34,43 +39,49 @@ public class Field
     override public string ToString()
     {
         string result = "";
-        for (int i = 0; i < items.Length; i++)
+        for (int y = 0; y < height; y++)
         {
-            for (int k = 0; k < items[i].Length; k++)
+            for (int x = 0; x < width; x++)
             {
-                result += items[i][k].ToString();
+                result += items.Where(a => a.coordinates == new Vector2(x,y)).First().ToString();
             }
             result += "\n";
         }
         return result;
     }
 
-    public Item CreateItem(int id)
+    public Item CreateItem(int id, Vector2 coordinates)
     {
         switch (id)
         {
             default:
             case 0:
-                return new Item("A");
+                return new Item("A", coordinates);
             case 1:
-                return new Item("B");
+                return new Item("B", coordinates);
             case 2:
-                return new Item("C");
+                return new Item("C", coordinates);
             case 3:
-                return new Item("D");
+                return new Item("D", coordinates);
             case 4:
-                return new Item("E");
+                return new Item("E", coordinates);
         }
     }
 
-    public void SwitchItems(Vector2 from, Vector2 to)
+    public void SwitchItems(Item from, Item to)
     {
         Debug.Log("Switched items " + from + " " + to);
+        Vector2 temp = from.coordinates;
+        from.coordinates = to.coordinates;
+        to.coordinates = temp;
+
+        from.movedTo?.Invoke(from.coordinates);
+        to.movedTo?.Invoke(to.coordinates);
         //todo checks
+        /*
         Item item = items[(int)to.y][(int)to.x];
         items[(int)to.y][(int)to.x] = items[(int)from.y][(int)from.x];
         items[(int)to.y][(int)to.x] = item;
-        items[(int)to.y][(int)to.x].movedTo?.Invoke((int)from.x, (int)from.y);
-        items[(int)from.y][(int)from.x].movedTo?.Invoke((int)to.x, (int)to.y);
+        */
     }
 }
