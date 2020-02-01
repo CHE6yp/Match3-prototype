@@ -13,7 +13,7 @@ public class Field
 
     public Item this[int x, int y]
     {
-        get { return items.Where(a=>a.coordinates == new Vector2(x,y)).First(); }
+        get { return items.Where(a => a.coordinates == new Vector2(x, y)).First(); }
         //set { items.Where(a=>a.coordinates == new Vector2(x, y)) = value; }
     }
     //public int Length { get { return items.Length; } }
@@ -28,11 +28,11 @@ public class Field
         {
             for (int x = 0; x < width; x++)
             {
-                items.Add(CreateItem(Random.Range(0, 5),new Vector2(x,y)));
+                items.Add(CreateItem(Random.Range(0, 5), new Vector2(x, y)));
             }
         }
     }
-    public Field(int size) : this(size,size) {}
+    public Field(int size) : this(size, size) { }
     public Field() : this(8) { }
 
 
@@ -43,7 +43,7 @@ public class Field
         {
             for (int x = 0; x < width; x++)
             {
-                result += items.Where(a => a.coordinates == new Vector2(x,y)).First().ToString();
+                result += items.Where(a => a.coordinates == new Vector2(x, y)).First().ToString();
             }
             result += "\n";
         }
@@ -74,11 +74,55 @@ public class Field
         Vector2 temp = from.coordinates;
         from.MoveTo(to.coordinates);
         to.MoveTo(temp);
+        CheckMatches();
         //todo checks
         /*
         Item item = items[(int)to.y][(int)to.x];
         items[(int)to.y][(int)to.x] = items[(int)from.y][(int)from.x];
         items[(int)to.y][(int)to.x] = item;
         */
+    }
+
+    public void CheckMatches()
+    {
+        List<MatchData> matches = new List<MatchData>();
+        //for loop instead of foreach, so that i don't have to go down when checking for matches. Maybe i'll still have to go down
+        for (int y = 0; y < height; y++)
+        {
+            for (int x = 0; x < width; x++)
+            {
+                Item item = items.Where(a => a.coordinates == new Vector2(x, y)).First();
+                MatchData match = CheckMatchRecursive(item, new MatchData(item.type));
+                if (match.IsValid())
+                    matches.Add(match);
+            }
+        }
+
+        foreach (MatchData match in matches)
+        {
+            Debug.Log(match);
+        }
+    }
+
+    public MatchData CheckMatchRecursive(Item item, MatchData matchData)
+    {
+        if (item.checkedForMatch || item.type != matchData.type)
+            return matchData;
+
+        item.checkedForMatch = true;
+        matchData.items.Add(item);
+
+        IEnumerable<Item> nextItems = items.Where(a => 
+            a.coordinates == item.coordinates + new Vector2(0, 1) ||
+            a.coordinates == item.coordinates + new Vector2(0, -1) ||
+            a.coordinates == item.coordinates + new Vector2(-1, 0) ||
+            a.coordinates == item.coordinates + new Vector2(1, 0)
+            );
+        foreach (Item nextItem in nextItems)
+        {
+            CheckMatchRecursive(nextItem, matchData);
+        }
+
+        return matchData;
     }
 }

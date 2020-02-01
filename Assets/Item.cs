@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 [System.Serializable]
@@ -13,6 +14,8 @@ public class Item
     public Vector2 coordinates;
     public delegate void CoordAction(Vector2 coordinates);
     public CoordAction movedTo;
+
+    public bool checkedForMatch = false;
     
     public Item(string t)
     {
@@ -56,6 +59,12 @@ public class Item
     {
         coordinates = coord;
         movedTo?.Invoke(coordinates);
+    }
+
+    public void CheckMatchRecursive(MatchData matchData)
+    {
+        //items.Where(a => a.coordinates == new Vector2(x, y)).First().ToString();
+        
     }
     
 }
