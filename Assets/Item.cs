@@ -19,6 +19,7 @@ public class Item
     public ItemAction scored;
 
     public bool checkedForMatch = false;
+    public int fallingSteps = 0;
     
     public Item(string t)
     {
@@ -41,7 +42,7 @@ public class Item
 
     public override string ToString()
     {
-        return "[" + type + ((frozen) ? "F" : " ") + "]";
+        return "[" + type + fallingSteps + "]";
     }
 
     public Color GetColor()
@@ -67,6 +68,12 @@ public class Item
 
     public void Score()
     {
+        IEnumerable<Item> upperItems = Field.instance.items.Where(a => a.coordinates.x == this.coordinates.x && a.coordinates.y > this.coordinates.y);
+        foreach (Item item in upperItems)
+        {
+            item.fallingSteps++;
+        }
+        fallingSteps++;
         NewType();
         scored?.Invoke();
         MoveTo(coordinates +new Vector2(0, Field.instance.height-1));

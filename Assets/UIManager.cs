@@ -56,7 +56,7 @@ public class UIManager : MonoBehaviour
 
     void ItemButtonLook(GameObject button, Item item)
     {
-        button.transform.GetChild(0).GetComponent<Text>().text = item.type;
+        button.transform.GetChild(0).GetComponent<Text>().text = item.type +item.fallingSteps;
         button.GetComponent<Image>().color = item.GetColor();
     }
 

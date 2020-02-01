@@ -37,7 +37,7 @@ public class Field
     public Field(int size) : this(size, size) { }
     public Field() : this(8) { }
 
-
+    //TODO rewrite to foreach loop somehow
     override public string ToString()
     {
         string result = "";
@@ -101,6 +101,10 @@ public class Field
         {
             item.checkedForMatch = false;
         }
+        //Debug.Log(this);//Nope
+
+        // todo falling pieces
+        // todo check matches after everythis fell
     }
 
     public MatchData CheckMatchRecursive(Item item, MatchData matchData)
