@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MatchData 
+public class MatchData
 {
     public string type;
     public List<Item> items;
+    public bool isValid { get { return items.Count >= 3; } }
 
     public MatchData(string t)
     {
@@ -22,8 +23,9 @@ public class MatchData
         return result;
     }
 
-    public bool IsValid()
+    public void ScoreMatch()
     {
-        return (items.Count>=3);
+        foreach (Item item in items)
+            item.Score();
     }
 }

@@ -14,6 +14,9 @@ public class Item
     public Vector2 coordinates;
     public delegate void CoordAction(Vector2 coordinates);
     public CoordAction movedTo;
+    public delegate void ItemAction();
+    public ItemAction moved;
+    public ItemAction scored;
 
     public bool checkedForMatch = false;
     
@@ -59,12 +62,37 @@ public class Item
     {
         coordinates = coord;
         movedTo?.Invoke(coordinates);
+        moved?.Invoke(); //for some reason this doesn't work
     }
 
-    public void CheckMatchRecursive(MatchData matchData)
+    public void Score()
     {
-        //items.Where(a => a.coordinates == new Vector2(x, y)).First().ToString();
-        
+        NewType();
+        scored?.Invoke();
+        MoveTo(coordinates +new Vector2(0, Field.instance.height-1));
+    }
+
+    public void NewType()
+    {
+        switch (Random.Range(0,5))
+        {
+            default:
+            case 0:
+                type = "A";
+                break;
+            case 1:
+                type = "B";
+                break;
+            case 2:
+                type = "C";
+                break;
+            case 3:
+                type = "D";
+                break;
+            case 4:
+                type = "E";
+                break;
+        }
     }
     
 }
