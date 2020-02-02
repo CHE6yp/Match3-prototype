@@ -13,7 +13,10 @@ public class UIManager : MonoBehaviour
 
     public Text scoreText;
 
-    public int scoringMatches = 0;
+    int coroutineCounter = 0;
+
+    public List<Mesh> buttonMeshes;
+    public List<Material> buttonMaterials;
 
     //public bool visualiseDropping = false;
     public float buildingDropInterval = 0;
@@ -78,6 +81,33 @@ public class UIManager : MonoBehaviour
     {
         button.transform.GetChild(0).GetComponent<Text>().text = item.type + item.fallingSteps;
         button.GetComponent<Image>().color = item.GetColor();
+
+        switch (item.type)
+        {
+            default:
+            case "A":
+                button.transform.GetChild(1).GetComponent<MeshFilter>().mesh = buttonMeshes[0];
+                button.transform.GetChild(1).GetComponent<MeshRenderer>().material = buttonMaterials[0];
+                break;
+            case "B":
+                button.transform.GetChild(1).GetComponent<MeshFilter>().mesh = buttonMeshes[1];
+                button.transform.GetChild(1).GetComponent<MeshRenderer>().material = buttonMaterials[1];
+                break;
+            case "C":
+                button.transform.GetChild(1).GetComponent<MeshFilter>().mesh = buttonMeshes[2];
+                button.transform.GetChild(1).GetComponent<MeshRenderer>().material = buttonMaterials[2];
+                break;
+            case "D":
+                button.transform.GetChild(1).GetComponent<MeshFilter>().mesh = buttonMeshes[3];
+                button.transform.GetChild(1).GetComponent<MeshRenderer>().material = buttonMaterials[3];
+                break;
+            case "E":
+                button.transform.GetChild(1).GetComponent<MeshFilter>().mesh = buttonMeshes[4];
+                button.transform.GetChild(1).GetComponent<MeshRenderer>().material = buttonMaterials[4];
+                break;
+        }
+        button.transform.GetChild(2).GetComponent<ParticleSystem>().startColor = button.transform.GetChild(1).GetComponent<MeshRenderer>().material.color;
+        button.transform.GetChild(2).GetChild(0).GetComponent<ParticleSystem>().startColor = button.transform.GetChild(1).GetComponent<MeshRenderer>().material.color;
     }
 
     //Why doesn't it work? Seems like a Unity bug
@@ -114,16 +144,19 @@ public class UIManager : MonoBehaviour
     public void SelectItemButton(GameObject button)
     {
         button.GetComponent<Outline>().enabled = true;
+        button.transform.GetChild(2).GetComponent<ParticleSystem>().Play(false);
     }
 
     public void DeselectItemButton(GameObject button)
     {
         button.GetComponent<Outline>().enabled = false;
+        button.transform.GetChild(2).GetComponent<ParticleSystem>().Stop();
     }
 
     public void Score(GameObject button, Item item)
     {
-        SelectItemButton(button);
+        //SelectItemButton(button);
+        button.transform.GetChild(2).GetChild(0).GetComponent<ParticleSystem>().Play(true);
         //ItemButtonLook(button, item);
     }
 
@@ -153,12 +186,12 @@ public class UIManager : MonoBehaviour
 
     public IEnumerator ScoreMatchesC(List<MatchData> matches)
     {
-        scoringMatches = matches.Count;
+        coroutineCounter = matches.Count;
         foreach (MatchData match in matches)
         {
             StartCoroutine(ScoreMatch(match));
         }
-        while (scoringMatches > 0) yield return null;
+        while (coroutineCounter > 0) yield return null;
 
         //foreach (Item item in match.items)
 
@@ -181,7 +214,7 @@ public class UIManager : MonoBehaviour
     {
         foreach (Item item in match.items)
         {
-            SelectItemButton(item.visualObject);
+            Score(item.visualObject, item);
         }
         /*
         yield return new WaitForSeconds(1);
@@ -194,7 +227,7 @@ public class UIManager : MonoBehaviour
         */
 
         yield return new WaitForSeconds(1);
-        scoringMatches--;
+        coroutineCounter--;
     }
 
     public void DropItemButtons()
@@ -204,12 +237,12 @@ public class UIManager : MonoBehaviour
 
     public IEnumerator DropItemButtonsC()
     {
-        scoringMatches = GameManager.instance.field.items.Count;
+        coroutineCounter = GameManager.instance.field.items.Count;
         foreach (Item item in GameManager.instance.field.items)
         {
             StartCoroutine(DropItemButton(item));
         }
-        while (scoringMatches > 0) yield return null;
+        while (coroutineCounter > 0) yield return null;
         //Here proceed to the next step
         GameManager.instance.CheckMatches();
 
@@ -224,7 +257,7 @@ public class UIManager : MonoBehaviour
 
             yield return new WaitForSeconds(0.02f);
         }
-        scoringMatches--;
+        coroutineCounter--;
     }
 
 

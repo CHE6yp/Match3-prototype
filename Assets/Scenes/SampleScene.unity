@@ -377,7 +377,18 @@ MonoBehaviour:
   buttons: []
   selectedButton: {fileID: 0}
   scoreText: {fileID: 29169954}
-  scoringMatches: 0
+  buttonMeshes:
+  - {fileID: 4300000, guid: a59faa6df8bd9cd4c8779604face71a1, type: 3}
+  - {fileID: 4300000, guid: fce0ecff534816b49af71ef31033c259, type: 3}
+  - {fileID: 4300000, guid: 8b4719f3fd5020040bdbb5595fda39aa, type: 3}
+  - {fileID: 4300000, guid: f5e70b692f804d346a44df961b6ad5a8, type: 3}
+  - {fileID: 4300000, guid: 3be870bd3141f9741b70abdfb4242cb6, type: 3}
+  buttonMaterials:
+  - {fileID: 2100000, guid: 34a2d4fc8f422c345a4cc739f3ee3b81, type: 2}
+  - {fileID: 2100000, guid: 640dc2f025ee433489ca50d9f685de47, type: 2}
+  - {fileID: 2100000, guid: efe6fc25350958c479cd9fcde7e565f9, type: 2}
+  - {fileID: 2100000, guid: 6a6944f4904547e4fb039789da5fcd85, type: 2}
+  - {fileID: 2100000, guid: 5a9e6cf91cbfc1a4fbc9470cca37b97a, type: 2}
   buildingDropInterval: 0
   scoreToDropInterval: 0
 --- !u!4 &710954448
@@ -527,7 +538,7 @@ Canvas:
   m_GameObject: {fileID: 900872229}
   m_Enabled: 1
   serializedVersion: 3
-  m_RenderMode: 0
+  m_RenderMode: 2
   m_Camera: {fileID: 0}
   m_PlaneDistance: 100
   m_PixelPerfect: 0
@@ -548,7 +559,7 @@ RectTransform:
   m_GameObject: {fileID: 900872229}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1760444561}
   - {fileID: 29169953}
@@ -558,8 +569,8 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
-  m_Pivot: {x: 0, y: 0}
+  m_SizeDelta: {x: 1100, y: 540}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0
@@ -612,8 +623,8 @@ Camera:
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 60
-  orthographic: 0
-  orthographic size: 5
+  orthographic: 1
+  orthographic size: 173.1
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -637,7 +648,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: -10}
+  m_LocalPosition: {x: 0, y: 1, z: -77}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
