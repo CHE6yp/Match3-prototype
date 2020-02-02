@@ -12,9 +12,13 @@ public class Field
     public int width;
     public int height;
 
+    private int _score = 0;
+    public int score { get { return _score; } set { _score = value; scoreChanged?.Invoke(); } }
+
     public delegate void FieldEvent();
     public FieldEvent checkedMatches;
     public FieldEvent droppedItems;
+    public FieldEvent scoreChanged;
     public delegate void SwitchItemsEvent(Item from, Item to);
     public SwitchItemsEvent itemsSwitched;
     public delegate void ScoredMatchesEvent(List<MatchData> matches);

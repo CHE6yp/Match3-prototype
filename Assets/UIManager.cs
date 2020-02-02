@@ -11,7 +11,13 @@ public class UIManager : MonoBehaviour
     public List<GameObject> buttons;
     public GameObject selectedButton;
 
+    public Text scoreText;
+
     public int scoringMatches = 0;
+
+    //public bool visualiseDropping = false;
+    public float buildingDropInterval = 0;
+    public float scoreToDropInterval = 0;
 
 
     // Start is called before the first frame update
@@ -36,6 +42,7 @@ public class UIManager : MonoBehaviour
         GameManager.instance.field.itemsSwitched += SwitchItemButtons;
         GameManager.instance.field.scoredMatches += ScoreMatches;
         GameManager.instance.field.droppedItems += DropItemButtons;
+        GameManager.instance.field.scoreChanged += () => { scoreText.text = "$" + GameManager.instance.field.score; StartCoroutine(ScoreTextChanged()); };
     }
 
     void SetupItemButton(Item item)
@@ -47,7 +54,8 @@ public class UIManager : MonoBehaviour
 
         ItemButtonLook(button, item);
 
-        button.GetComponent<Button>().onClick.AddListener(() => {
+        button.GetComponent<Button>().onClick.AddListener(() =>
+        {
             if (selectedButton != null) DeselectItemButton(selectedButton);
             if (!GameManager.instance.SelectItem(item))
             {
@@ -68,7 +76,7 @@ public class UIManager : MonoBehaviour
 
     void ItemButtonLook(GameObject button, Item item)
     {
-        button.transform.GetChild(0).GetComponent<Text>().text = item.type +item.fallingSteps;
+        button.transform.GetChild(0).GetComponent<Text>().text = item.type + item.fallingSteps;
         button.GetComponent<Image>().color = item.GetColor();
     }
 
@@ -89,11 +97,11 @@ public class UIManager : MonoBehaviour
 
     public IEnumerator MoveToCouroutine(Transform tr, Vector2 coordinates)
     {
-        Vector2 path = coordinates*30 - tr.GetComponent<RectTransform>().anchoredPosition;
+        Vector2 path = coordinates * 30 - tr.GetComponent<RectTransform>().anchoredPosition;
         for (int i = 0; i < 25; i++)
         {
-            tr.GetComponent<RectTransform>().anchoredPosition += path * 0.04f ;
-           
+            tr.GetComponent<RectTransform>().anchoredPosition += path * 0.04f;
+
             yield return new WaitForSeconds(0.02f);
         }
     }
@@ -148,21 +156,22 @@ public class UIManager : MonoBehaviour
         scoringMatches = matches.Count;
         foreach (MatchData match in matches)
         {
-            StartCoroutine(ScoreMatch(match)); 
+            StartCoroutine(ScoreMatch(match));
         }
         while (scoringMatches > 0) yield return null;
 
         //foreach (Item item in match.items)
-        
+
         foreach (Item item in GameManager.instance.field.items)
         {
             MoveTo(item.visualObject.transform, item);
-            yield return new WaitForSeconds(0.03f);
+            if (buildingDropInterval != 0)
+                yield return new WaitForSeconds(buildingDropInterval);
             //Debug.Log("fs " + item.fallingSteps + "; coordinates " + item.coordinates);
             ItemButtonLook(item.visualObject, item);
             DeselectItemButton(item.visualObject);
         }
-        yield return new WaitForSeconds(3);
+        yield return new WaitForSeconds(scoreToDropInterval);
         //Here proceed to the next step
         GameManager.instance.DropItems();
 
@@ -218,4 +227,18 @@ public class UIManager : MonoBehaviour
         scoringMatches--;
     }
 
+
+    public IEnumerator ScoreTextChanged()
+    {
+        for (int i = 0; i < 5; i++)
+        {
+            scoreText.fontSize += 1;
+            yield return new WaitForSeconds(0.02f);
+        }
+        for (int i = 0; i < 5; i++)
+        {
+            scoreText.fontSize -= 1;
+            yield return new WaitForSeconds(0.02f);
+        }
+    }
 }

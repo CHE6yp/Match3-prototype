@@ -10,6 +10,8 @@ public class Item
 
     [SerializeField]
     public string type;
+
+    public int scoreAmount = 3;
     [SerializeField]
     public bool frozen;
 
@@ -87,6 +89,7 @@ public class Item
         }
         fallingSteps++;
         NewType();
+        Field.instance.score += scoreAmount;
         //scored?.Invoke();
         //MoveTo(new Vector2(coordinates.x, Field.instance.height-1+fallingSteps));
     }
