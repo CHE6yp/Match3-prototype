@@ -6,6 +6,8 @@ using UnityEngine;
 [System.Serializable]
 public class Item
 {
+    public GameObject visualObject;
+
     [SerializeField]
     public string type;
     [SerializeField]
@@ -72,8 +74,8 @@ public class Item
     {
         coordinates -= new Vector2(0, fallingSteps);
         fallingSteps = 0;
-        dropped?.Invoke();
-        droppedTo?.Invoke(coordinates);
+        //dropped?.Invoke();
+        //droppedTo?.Invoke(coordinates);
     }
 
     public void Score()
@@ -85,7 +87,7 @@ public class Item
         }
         fallingSteps++;
         NewType();
-        scored?.Invoke();
+        //scored?.Invoke();
         MoveTo(new Vector2(coordinates.x, Field.instance.height-1+fallingSteps));
     }
 

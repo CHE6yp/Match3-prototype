@@ -13,6 +13,11 @@ public class Field
     public int height;
     public delegate void FieldEvent();
     public FieldEvent checkedMatches;
+    public FieldEvent droppedItems;
+    public delegate void SwitchItemsEvent(Item from, Item to);
+    public SwitchItemsEvent itemsSwitched;
+    public delegate void ScoredMatchesEvent(List<MatchData> matches);
+    public ScoredMatchesEvent scoredMatches;
 
     public Item this[int x, int y]
     {
@@ -78,8 +83,9 @@ public class Field
         Vector2 temp = from.coordinates;
         from.MoveTo(to.coordinates);
         to.MoveTo(temp);
+        itemsSwitched?.Invoke(from, to);
 
-        CheckMatches();
+        //CheckMatches();
     }
 
     public void CheckMatches()
@@ -93,11 +99,7 @@ public class Field
                 matches.Add(match);
         }
 
-        foreach (MatchData match in matches)
-        {
-            //Debug.Log(match);
-            match.ScoreMatch();
-        }
+        ScoreMatches(matches);
 
         foreach (Item item in items)
         {
@@ -106,10 +108,7 @@ public class Field
 
         checkedMatches?.Invoke();
 
-        foreach (Item item in items)
-        {
-            item.Drop();
-        }
+        //DropItems();
 
         //Debug.Log(this);//Nope
 
@@ -137,5 +136,24 @@ public class Field
         }
 
         return matchData;
+    }
+
+    public void DropItems()
+    {
+        foreach (Item item in items)
+        {
+            item.Drop();
+        }
+        droppedItems?.Invoke();
+    }
+
+    public void ScoreMatches(List<MatchData> matches)
+    {
+        foreach (MatchData match in matches)
+        {
+            //Debug.Log(match);
+            match.ScoreMatch();
+        }
+        scoredMatches?.Invoke(matches);
     }
 }

@@ -20,18 +20,18 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     public bool SelectItem(Item item)
     {
-        Debug.Log("Selected "+item.coordinates);
+        Debug.Log("Selected " + item.coordinates);
         Debug.Log(selectedItem);
         if (selectedItem == null || selectedItem == item || Vector2.Distance(selectedItem.coordinates, item.coordinates) > 1)
         {
@@ -44,5 +44,15 @@ public class GameManager : MonoBehaviour
             selectedItem = null;
             return true;
         }
+    }
+
+    public void CheckMatches()
+    {
+        field.CheckMatches();
+    }
+
+    public void DropItems()
+    {
+        field.DropItems();
     }
 }
