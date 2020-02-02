@@ -151,6 +151,18 @@ public class UIManager : MonoBehaviour
             StartCoroutine(ScoreMatch(match)); 
         }
         while (scoringMatches > 0) yield return null;
+
+        //foreach (Item item in match.items)
+        
+        foreach (Item item in GameManager.instance.field.items)
+        {
+            MoveTo(item.visualObject.transform, item);
+            yield return new WaitForSeconds(0.03f);
+            //Debug.Log("fs " + item.fallingSteps + "; coordinates " + item.coordinates);
+            ItemButtonLook(item.visualObject, item);
+            DeselectItemButton(item.visualObject);
+        }
+        yield return new WaitForSeconds(3);
         //Here proceed to the next step
         GameManager.instance.DropItems();
 
@@ -162,6 +174,7 @@ public class UIManager : MonoBehaviour
         {
             SelectItemButton(item.visualObject);
         }
+        /*
         yield return new WaitForSeconds(1);
         foreach (Item item in match.items)
         {
@@ -169,6 +182,8 @@ public class UIManager : MonoBehaviour
             ItemButtonLook(item.visualObject, item);
             DeselectItemButton(item.visualObject);
         }
+        */
+
         yield return new WaitForSeconds(1);
         scoringMatches--;
     }

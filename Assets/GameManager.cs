@@ -14,7 +14,7 @@ public class GameManager : MonoBehaviour
         selectedItem = null;
         instance = this;
 
-        field = new Field();
+        field = new Field(8,8);
         Debug.Log(field);
     }
 

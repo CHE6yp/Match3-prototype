@@ -11,6 +11,7 @@ public class Field
     public List<Item> items;
     public int width;
     public int height;
+
     public delegate void FieldEvent();
     public FieldEvent checkedMatches;
     public FieldEvent droppedItems;
@@ -108,13 +109,6 @@ public class Field
             ScoreMatches(matches);
 
         checkedMatches?.Invoke();
-
-        //DropItems();
-
-        //Debug.Log(this);//Nope
-
-        // todo falling pieces
-        // todo check matches after everythis fell
     }
 
     public MatchData CheckMatchRecursive(Item item, MatchData matchData)
@@ -150,11 +144,39 @@ public class Field
 
     public void ScoreMatches(List<MatchData> matches)
     {
+
+        List<Item> scoredItems = new List<Item>();
         foreach (MatchData match in matches)
         {
             //Debug.Log(match);
             match.ScoreMatch();
+            scoredItems.AddRange(match.items);
         }
+        foreach (Item item in scoredItems)
+        {
+            item.MoveTo(new Vector2(item.coordinates.x, Field.instance.height - 1 + item.fallingSteps));
+            //item.fallingSteps = scoredItems.Where((a)=>(a.coordinates.x == item.coordinates.x)).Count();
+        }
+        foreach (Item item in scoredItems)
+            item.fallingSteps = scoredItems.Where((a) => (a.coordinates.x == item.coordinates.x)).Count();
+
         scoredMatches?.Invoke(matches);
     }
+
+    /*
+    public void ScoreMatches(List<MatchData> matches)
+    {
+
+        List<Item> scoredItems = new List<Item>();
+        foreach (MatchData match in matches)
+        {
+            //Debug.Log(match);
+            match.ScoreMatch();
+            scoredItems.AddRange(match.items);
+        }
+        foreach (Item item in scoredItems)
+            item.MoveTo(new Vector2(item.coordinates.x, Field.instance.height - 1 + item.fallingSteps));
+
+        scoredMatches?.Invoke(matches);
+    }*/
 }

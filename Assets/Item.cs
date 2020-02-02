@@ -88,7 +88,7 @@ public class Item
         fallingSteps++;
         NewType();
         //scored?.Invoke();
-        MoveTo(new Vector2(coordinates.x, Field.instance.height-1+fallingSteps));
+        //MoveTo(new Vector2(coordinates.x, Field.instance.height-1+fallingSteps));
     }
 
     public void NewType()
