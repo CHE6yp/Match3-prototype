@@ -187,7 +187,7 @@ public class UIManager : MonoBehaviour
         }
         while (scoringMatches > 0) yield return null;
         //Here proceed to the next step
-        GameManager.instance.DropItems();
+        GameManager.instance.CheckMatches();
 
     }
 
@@ -200,6 +200,7 @@ public class UIManager : MonoBehaviour
 
             yield return new WaitForSeconds(0.02f);
         }
+        scoringMatches--;
     }
 
 }

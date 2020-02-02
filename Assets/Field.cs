@@ -99,12 +99,13 @@ public class Field
                 matches.Add(match);
         }
 
-        ScoreMatches(matches);
-
         foreach (Item item in items)
         {
             item.checkedForMatch = false;
         }
+
+        if (matches.Count!=0)
+            ScoreMatches(matches);
 
         checkedMatches?.Invoke();
 
