@@ -11,6 +11,8 @@ public class Field
     public List<Item> items;
     public int width;
     public int height;
+    public delegate void FieldEvent();
+    public FieldEvent checkedMatches;
 
     public Item this[int x, int y]
     {
@@ -101,6 +103,14 @@ public class Field
         {
             item.checkedForMatch = false;
         }
+
+        checkedMatches?.Invoke();
+
+        foreach (Item item in items)
+        {
+            item.Drop();
+        }
+
         //Debug.Log(this);//Nope
 
         // todo falling pieces

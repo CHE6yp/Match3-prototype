@@ -14,9 +14,11 @@ public class Item
     public Vector2 coordinates;
     public delegate void CoordAction(Vector2 coordinates);
     public CoordAction movedTo;
+    public CoordAction droppedTo;
     public delegate void ItemAction();
     public ItemAction moved;
     public ItemAction scored;
+    public ItemAction dropped;
 
     public bool checkedForMatch = false;
     public int fallingSteps = 0;
@@ -66,6 +68,14 @@ public class Item
         moved?.Invoke(); //for some reason this doesn't work
     }
 
+    public void Drop()
+    {
+        coordinates -= new Vector2(0, fallingSteps);
+        fallingSteps = 0;
+        dropped?.Invoke();
+        droppedTo?.Invoke(coordinates);
+    }
+
     public void Score()
     {
         IEnumerable<Item> upperItems = Field.instance.items.Where(a => a.coordinates.x == this.coordinates.x && a.coordinates.y > this.coordinates.y);
@@ -76,7 +86,7 @@ public class Item
         fallingSteps++;
         NewType();
         scored?.Invoke();
-        MoveTo(coordinates +new Vector2(0, Field.instance.height-1));
+        MoveTo(new Vector2(coordinates.x, Field.instance.height-1+fallingSteps));
     }
 
     public void NewType()

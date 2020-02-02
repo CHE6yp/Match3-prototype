@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,6 +8,7 @@ public class UIManager : MonoBehaviour
     public Canvas canvas;
     public RectTransform panel;
     public GameObject buttonPrefab;
+    public List<GameObject> buttons;
     public GameObject selectedButton;
 
 
@@ -24,6 +26,7 @@ public class UIManager : MonoBehaviour
 
     public void DrawField()
     {
+        buttons = new List<GameObject>();
         foreach (Item item in GameManager.instance.field.items)
         {
             SetupItemButton(item);
@@ -32,26 +35,29 @@ public class UIManager : MonoBehaviour
 
     void SetupItemButton(Item item)
     {
-        GameObject buttonTemp = Instantiate(buttonPrefab, panel);
-        buttonTemp.GetComponent<RectTransform>().anchoredPosition = item.coordinates * 30;
+        GameObject button = Instantiate(buttonPrefab, panel);
+        buttons.Add(button);
+        button.GetComponent<RectTransform>().anchoredPosition = item.coordinates * 30;
 
-        ItemButtonLook(buttonTemp, item);
+        ItemButtonLook(button, item);
 
-        buttonTemp.GetComponent<Button>().onClick.AddListener(() => {
+        button.GetComponent<Button>().onClick.AddListener(() => {
             if (selectedButton != null) selectedButton.GetComponent<Outline>().enabled = false;
             if (!GameManager.instance.SelectItem(item))
             {
-                selectedButton = buttonTemp;
-                SelectItemButton(buttonTemp);
+                selectedButton = button;
+                SelectItemButton(button);
             }
             else
             {
                 selectedButton = null;
             }
         });
-        item.movedTo += (coordinates) => { MoveTo(buttonTemp.transform, coordinates); };
+        item.movedTo += (coordinates) => { MoveTo(button.transform, coordinates); };
+        item.droppedTo += (coordinates) => { Drop(button.transform, coordinates); };
         //item.moved += () => { MoveTo(buttonPrefab.transform, item); };
-        item.scored += () => { Score(buttonTemp, item); };
+        item.scored += () => { Score(button, item); };
+        Field.instance.checkedMatches += () => { ItemButtonLook(button, item); };
     }
 
     void ItemButtonLook(GameObject button, Item item)
@@ -81,6 +87,11 @@ public class UIManager : MonoBehaviour
         Debug.Log(tempId + " new position " + tr.GetComponent<RectTransform>().anchoredPosition);
     }
 
+    public void Drop(Transform tr, Vector2 coordinates)
+    {
+        MoveTo(tr, coordinates);
+    }
+
     public void SelectItemButton(GameObject button)
     {
         button.GetComponent<Outline>().enabled = true;
@@ -89,6 +100,6 @@ public class UIManager : MonoBehaviour
     public void Score(GameObject button, Item item)
     {
         SelectItemButton(button);
-        ItemButtonLook(button, item);
+        //ItemButtonLook(button, item);
     }
 }
