@@ -166,21 +166,4 @@ public class Field
 
         scoredMatches?.Invoke(matches);
     }
-
-    /*
-    public void ScoreMatches(List<MatchData> matches)
-    {
-
-        List<Item> scoredItems = new List<Item>();
-        foreach (MatchData match in matches)
-        {
-            //Debug.Log(match);
-            match.ScoreMatch();
-            scoredItems.AddRange(match.items);
-        }
-        foreach (Item item in scoredItems)
-            item.MoveTo(new Vector2(item.coordinates.x, Field.instance.height - 1 + item.fallingSteps));
-
-        scoredMatches?.Invoke(matches);
-    }*/
 }

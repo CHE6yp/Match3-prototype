@@ -6,7 +6,7 @@ using UnityEngine;
 [System.Serializable]
 public class Item
 {
-    public ItemButton visualObject;
+    public IItemVisual visualObject;
 
     [SerializeField]
     public string type;
@@ -16,13 +16,14 @@ public class Item
     public bool frozen;
 
     public Vector2 coordinates;
+
     public delegate void CoordAction(Vector2 coordinates);
-    public CoordAction movedTo;
-    public CoordAction droppedTo;
+    public CoordAction movedTo;//not used
+    public CoordAction droppedTo;//not used
     public delegate void ItemAction();
-    public ItemAction moved;
-    public ItemAction scored;
-    public ItemAction dropped;
+    public ItemAction moved;//not used
+    public ItemAction scored;//not used
+    public ItemAction dropped;//not used
 
     public bool checkedForMatch = false;
     public int fallingSteps = 0;
@@ -76,8 +77,6 @@ public class Item
     {
         coordinates -= new Vector2(0, fallingSteps);
         fallingSteps = 0;
-        //dropped?.Invoke();
-        //droppedTo?.Invoke(coordinates);
     }
 
     public void Score()
@@ -90,8 +89,6 @@ public class Item
         fallingSteps++;
         NewType();
         Field.instance.score += scoreAmount;
-        //scored?.Invoke();
-        //MoveTo(new Vector2(coordinates.x, Field.instance.height-1+fallingSteps));
     }
 
     public void NewType()

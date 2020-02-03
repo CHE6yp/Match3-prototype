@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ItemButton : MonoBehaviour, IItemVisual
+public class Item3D : MonoBehaviour, IItemVisual
 {
     public Item item { get; set; }
     public new Transform transform { get; private set; }
 
-    public static ItemButton selectedButton;
+    public static Item3D selectedButton;
     public RectTransform rectTransform;
     public Button buttonComponent;
 
@@ -30,8 +30,22 @@ public class ItemButton : MonoBehaviour, IItemVisual
 
     public void UpdateLook()
     {
-        transform.GetChild(0).GetComponent<Text>().text = item.type + item.fallingSteps;
-        GetComponent<Image>().color = item.GetColor();
+        int i = 0;
+        switch (item.type)
+        {
+            default:
+            case "A": i=0; break;
+            case "B": i=1; break;
+            case "C": i=2; break;
+            case "D": i=3; break;
+            case "E": i=4; break;
+        }
+
+        transform.GetChild(1).GetComponent<MeshFilter>().mesh = UIManager.instance.buttonMeshes[i];
+        transform.GetChild(1).GetComponent<MeshRenderer>().material = UIManager.instance.buttonMaterials[i];
+
+        transform.GetChild(2).GetComponent<ParticleSystem>().startColor = transform.GetChild(1).GetComponent<MeshRenderer>().material.color;
+        transform.GetChild(2).GetChild(0).GetComponent<ParticleSystem>().startColor = transform.GetChild(1).GetComponent<MeshRenderer>().material.color;
     }
     
     public void UpdatePosition()
@@ -52,15 +66,14 @@ public class ItemButton : MonoBehaviour, IItemVisual
         MoveTo(coordinates);
     }
 
-    void Select()
+    public void Select()
     {
         if (selectedButton != null) selectedButton.Deselect();
-
         //todo change gamemanage.inst.SelectItem(item) to item.Select();
         if (!GameManager.instance.SelectItem(item))
         {
             selectedButton = this;
-            GetComponent<Outline>().enabled = true;
+            transform.GetChild(2).GetComponent<ParticleSystem>().Play(false);
         }
         else
         {
@@ -68,20 +81,13 @@ public class ItemButton : MonoBehaviour, IItemVisual
         }
     }
 
-    void Deselect()
+    public void Deselect()
     {
-        GetComponent<Outline>().enabled = false;
+        transform.GetChild(2).GetComponent<ParticleSystem>().Stop();
     }
 
     public void Score()
     {
-        StartCoroutine(Score(1));
-    }
-
-    IEnumerator Score(float time)
-    {
-        GetComponent<Outline>().enabled = true;
-        yield return new WaitForSeconds(time);
-        Deselect();
+        transform.GetChild(2).GetChild(0).GetComponent<ParticleSystem>().Play(true);
     }
 }

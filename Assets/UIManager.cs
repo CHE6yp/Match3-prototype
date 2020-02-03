@@ -50,27 +50,26 @@ public class UIManager : MonoBehaviour
     void SetupItemButton(Item item)
     {
         GameObject button = Instantiate(buttonPrefab, panel);
-        
+
         buttons.Add(button);
 
-        button.GetComponent<ItemButton>().Setup(item);
+        button.GetComponent<IItemVisual>().Setup(item);
     }
-
     
-
+    //Switching needs to be in IItemVisual
     public void SwitchItemButtons(Item from, Item to)
     {
         StartCoroutine(SwitchItemButtons(from.visualObject, to.visualObject));
     }
 
-    public IEnumerator SwitchItemButtons(ItemButton from, ItemButton to)
+    public IEnumerator SwitchItemButtons(IItemVisual from, IItemVisual to)
     {
-        Vector2 path = to.GetComponent<RectTransform>().anchoredPosition - from.GetComponent<RectTransform>().anchoredPosition;
+        Vector2 path = to.transform.GetComponent<RectTransform>().anchoredPosition - from.transform.GetComponent<RectTransform>().anchoredPosition;
 
         for (int i = 0; i < 25; i++)
         {
-            from.GetComponent<RectTransform>().anchoredPosition += path * 0.04f;
-            to.GetComponent<RectTransform>().anchoredPosition -= path * 0.04f;
+            from.transform.GetComponent<RectTransform>().anchoredPosition += path * 0.04f;
+            to.transform.GetComponent<RectTransform>().anchoredPosition -= path * 0.04f;
             yield return new WaitForSeconds(0.02f);
         }
         GameManager.instance.CheckMatches();
@@ -92,11 +91,11 @@ public class UIManager : MonoBehaviour
 
         foreach (Item item in GameManager.instance.field.items)
         {
-            item.visualObject.MoveTo();
+            item.visualObject.UpdatePosition();
             if (buildingDropInterval != 0)
                 yield return new WaitForSeconds(buildingDropInterval);
-            item.visualObject.ItemButtonLook();
-            item.visualObject.DeselectItemButton();
+            item.visualObject.UpdateLook();
+            //item.visualObject.Deselect(); does it work if i comment this? Seems to!
         }
         yield return new WaitForSeconds(scoreToDropInterval);
         //Here proceed to the next step
@@ -143,7 +142,6 @@ public class UIManager : MonoBehaviour
         }
         coroutineCounter--;
     }
-
 
     public IEnumerator ScoreTextChanged()
     {
