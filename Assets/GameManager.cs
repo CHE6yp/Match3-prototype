@@ -18,17 +18,6 @@ public class GameManager : MonoBehaviour
         Debug.Log(field);
     }
 
-    void Start()
-    {
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
     public bool SelectItem(Item item)
     {
         Debug.Log("Selected " + item.coordinates);

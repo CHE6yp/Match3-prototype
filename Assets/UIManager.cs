@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
+    public static UIManager instance;
     public Canvas canvas;
     public RectTransform panel;
     public GameObject buttonPrefab;
@@ -22,17 +23,15 @@ public class UIManager : MonoBehaviour
     public float buildingDropInterval = 0;
     public float scoreToDropInterval = 0;
 
+    private void Awake()
+    {
+        instance = this;
+    }
 
     // Start is called before the first frame update
     void Start()
     {
         DrawField();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
     }
 
     public void DrawField()
@@ -51,129 +50,27 @@ public class UIManager : MonoBehaviour
     void SetupItemButton(Item item)
     {
         GameObject button = Instantiate(buttonPrefab, panel);
-        item.visualObject = button;
+        
         buttons.Add(button);
-        button.GetComponent<RectTransform>().anchoredPosition = item.coordinates * 30;
 
-        ItemButtonLook(button, item);
-
-        button.GetComponent<Button>().onClick.AddListener(() =>
-        {
-            if (selectedButton != null) DeselectItemButton(selectedButton);
-            if (!GameManager.instance.SelectItem(item))
-            {
-                selectedButton = button;
-                SelectItemButton(button);
-            }
-            else
-            {
-                selectedButton = null;
-            }
-        });
-        //item.movedTo += (coordinates) => { MoveTo(button.transform, coordinates); };
-        item.droppedTo += (coordinates) => { Drop(button.transform, coordinates); };
-        //item.moved += () => { MoveTo(buttonPrefab.transform, item); };
-        item.scored += () => { Score(button, item); };
-        //Field.instance.checkedMatches += () => { ItemButtonLook(button, item); };
+        button.GetComponent<ItemButton>().Setup(item);
     }
 
-    void ItemButtonLook(GameObject button, Item item)
-    {
-        button.transform.GetChild(0).GetComponent<Text>().text = item.type + item.fallingSteps;
-        button.GetComponent<Image>().color = item.GetColor();
-
-        switch (item.type)
-        {
-            default:
-            case "A":
-                button.transform.GetChild(1).GetComponent<MeshFilter>().mesh = buttonMeshes[0];
-                button.transform.GetChild(1).GetComponent<MeshRenderer>().material = buttonMaterials[0];
-                break;
-            case "B":
-                button.transform.GetChild(1).GetComponent<MeshFilter>().mesh = buttonMeshes[1];
-                button.transform.GetChild(1).GetComponent<MeshRenderer>().material = buttonMaterials[1];
-                break;
-            case "C":
-                button.transform.GetChild(1).GetComponent<MeshFilter>().mesh = buttonMeshes[2];
-                button.transform.GetChild(1).GetComponent<MeshRenderer>().material = buttonMaterials[2];
-                break;
-            case "D":
-                button.transform.GetChild(1).GetComponent<MeshFilter>().mesh = buttonMeshes[3];
-                button.transform.GetChild(1).GetComponent<MeshRenderer>().material = buttonMaterials[3];
-                break;
-            case "E":
-                button.transform.GetChild(1).GetComponent<MeshFilter>().mesh = buttonMeshes[4];
-                button.transform.GetChild(1).GetComponent<MeshRenderer>().material = buttonMaterials[4];
-                break;
-        }
-        button.transform.GetChild(2).GetComponent<ParticleSystem>().startColor = button.transform.GetChild(1).GetComponent<MeshRenderer>().material.color;
-        button.transform.GetChild(2).GetChild(0).GetComponent<ParticleSystem>().startColor = button.transform.GetChild(1).GetComponent<MeshRenderer>().material.color;
-    }
-
-    //Why doesn't it work? Seems like a Unity bug
-    public void MoveTo(Transform tr, Item item)
-    {
-        int tempId = Random.Range(0, 256);
-        tr.GetComponent<RectTransform>().anchoredPosition = item.coordinates * 30;
-    }
-
-    public void MoveTo(Transform tr, Vector2 coordinates)
-    {
-        int tempId = Random.Range(0, 256);
-
-        tr.GetComponent<RectTransform>().anchoredPosition = coordinates * 30;
-        //StartCoroutine(MoveToCouroutine(tr, coordinates));
-    }
-
-    public IEnumerator MoveToCouroutine(Transform tr, Vector2 coordinates)
-    {
-        Vector2 path = coordinates * 30 - tr.GetComponent<RectTransform>().anchoredPosition;
-        for (int i = 0; i < 25; i++)
-        {
-            tr.GetComponent<RectTransform>().anchoredPosition += path * 0.04f;
-
-            yield return new WaitForSeconds(0.02f);
-        }
-    }
-
-    public void Drop(Transform tr, Vector2 coordinates)
-    {
-        MoveTo(tr, coordinates);
-    }
-
-    public void SelectItemButton(GameObject button)
-    {
-        button.GetComponent<Outline>().enabled = true;
-        button.transform.GetChild(2).GetComponent<ParticleSystem>().Play(false);
-    }
-
-    public void DeselectItemButton(GameObject button)
-    {
-        button.GetComponent<Outline>().enabled = false;
-        button.transform.GetChild(2).GetComponent<ParticleSystem>().Stop();
-    }
-
-    public void Score(GameObject button, Item item)
-    {
-        //SelectItemButton(button);
-        button.transform.GetChild(2).GetChild(0).GetComponent<ParticleSystem>().Play(true);
-        //ItemButtonLook(button, item);
-    }
+    
 
     public void SwitchItemButtons(Item from, Item to)
     {
         StartCoroutine(SwitchItemButtons(from.visualObject, to.visualObject));
     }
 
-    public IEnumerator SwitchItemButtons(GameObject from, GameObject to)
+    public IEnumerator SwitchItemButtons(ItemButton from, ItemButton to)
     {
         Vector2 path = to.GetComponent<RectTransform>().anchoredPosition - from.GetComponent<RectTransform>().anchoredPosition;
-        //Debug.Log("movepath " + path);
+
         for (int i = 0; i < 25; i++)
         {
             from.GetComponent<RectTransform>().anchoredPosition += path * 0.04f;
             to.GetComponent<RectTransform>().anchoredPosition -= path * 0.04f;
-            //Debug.Log(tr.GetComponent<RectTransform>().anchoredPosition);
             yield return new WaitForSeconds(0.02f);
         }
         GameManager.instance.CheckMatches();
@@ -193,16 +90,13 @@ public class UIManager : MonoBehaviour
         }
         while (coroutineCounter > 0) yield return null;
 
-        //foreach (Item item in match.items)
-
         foreach (Item item in GameManager.instance.field.items)
         {
-            MoveTo(item.visualObject.transform, item);
+            item.visualObject.MoveTo();
             if (buildingDropInterval != 0)
                 yield return new WaitForSeconds(buildingDropInterval);
-            //Debug.Log("fs " + item.fallingSteps + "; coordinates " + item.coordinates);
-            ItemButtonLook(item.visualObject, item);
-            DeselectItemButton(item.visualObject);
+            item.visualObject.ItemButtonLook();
+            item.visualObject.DeselectItemButton();
         }
         yield return new WaitForSeconds(scoreToDropInterval);
         //Here proceed to the next step
@@ -214,17 +108,8 @@ public class UIManager : MonoBehaviour
     {
         foreach (Item item in match.items)
         {
-            Score(item.visualObject, item);
+            item.visualObject.Score();
         }
-        /*
-        yield return new WaitForSeconds(1);
-        foreach (Item item in match.items)
-        {
-            MoveTo(item.visualObject.transform, item);
-            ItemButtonLook(item.visualObject, item);
-            DeselectItemButton(item.visualObject);
-        }
-        */
 
         yield return new WaitForSeconds(1);
         coroutineCounter--;
@@ -243,9 +128,8 @@ public class UIManager : MonoBehaviour
             StartCoroutine(DropItemButton(item));
         }
         while (coroutineCounter > 0) yield return null;
-        //Here proceed to the next step
-        GameManager.instance.CheckMatches();
 
+        GameManager.instance.CheckMatches();
     }
 
     public IEnumerator DropItemButton(Item item)
