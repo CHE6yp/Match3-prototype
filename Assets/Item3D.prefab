@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 7091050144485266250}
   - component: {fileID: 7151219577429877411}
   m_Layer: 5
-  m_Name: ItemButton
+  m_Name: Item3D
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9917,6 +9917,11 @@ PrefabInstance:
     - target: {fileID: 114000011393513452, guid: 0ed203d298c050b49bfabe788790e1c2,
         type: 3}
       propertyPath: rotationAngle.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114000011393513452, guid: 0ed203d298c050b49bfabe788790e1c2,
+        type: 3}
+      propertyPath: isFloating
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 23000010455495602, guid: 0ed203d298c050b49bfabe788790e1c2,

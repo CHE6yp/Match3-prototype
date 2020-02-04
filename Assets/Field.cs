@@ -66,20 +66,43 @@ public class Field
 
     public Item CreateItem(int id, Vector2 coordinates)
     {
+        string type;
         switch (id)
         {
             default:
-            case 0:
-                return new Item("A", coordinates);
-            case 1:
-                return new Item("B", coordinates);
-            case 2:
-                return new Item("C", coordinates);
-            case 3:
-                return new Item("D", coordinates);
+            case 0: 
+                type = "A";
+                break;
+            case 1: 
+                type = "B";
+                break;
+            case 2: 
+                type = "C";
+                break;
+            case 3: 
+                type = "D";
+                break;
             case 4:
-                return new Item("E", coordinates);
+                type = "E";
+                break;
         }
+
+        //TODO Think about this monstrosity
+        if ((items.Any((i) => i.coordinates == coordinates - new Vector2(0, 1)) && 
+            items.Where((i) => i.coordinates == coordinates - new Vector2(0, 1)).First().type == type &&
+            items.Any((i) => i.coordinates == coordinates - new Vector2(0, 2)) && 
+            items.Where((i) => i.coordinates == coordinates - new Vector2(0, 2)).First().type == type)
+            ||
+            (items.Any((i) => i.coordinates == coordinates - new Vector2(1, 0)) &&
+            items.Where((i) => i.coordinates == coordinates - new Vector2(1, 0)).First().type == type &&
+            items.Any((i) => i.coordinates == coordinates - new Vector2(2, 0)) &&
+            items.Where((i) => i.coordinates == coordinates - new Vector2(2, 0)).First().type == type))
+        {
+            Debug.Log("fofo");
+            return CreateItem(Random.Range(0, 5), coordinates);
+        }
+            
+        return new Item(type, coordinates);
     }
 
     public void SwitchItems(Item from, Item to)
@@ -195,6 +218,7 @@ public class Field
                     matches[i].items.AddRange(matches[j].items);
                     matches[i].items = matches[i].items.Distinct().ToList();
                     matches.RemoveAt(j);
+                    //TODO Check if I should do j-- here. Wont it skip a match?
                 }
             }
         }
