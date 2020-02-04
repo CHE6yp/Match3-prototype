@@ -77,6 +77,7 @@ public class UIManager : MonoBehaviour
     public void ScoreMatches(List<MatchData> matches)
     {
         StartCoroutine(ScoreMatchesC(matches));
+        Camera.main.GetComponent<AudioSource>().Play();//for now, this will do. TODO make an audioManager
     }
 
     public IEnumerator ScoreMatchesC(List<MatchData> matches)
@@ -146,12 +147,12 @@ public class UIManager : MonoBehaviour
     {
         for (int i = 0; i < 5; i++)
         {
-            scoreText.fontSize += 1;
+            scoreText.fontSize += 10;
             yield return new WaitForSeconds(0.02f);
         }
         for (int i = 0; i < 5; i++)
         {
-            scoreText.fontSize -= 1;
+            scoreText.fontSize -= 10;
             yield return new WaitForSeconds(0.02f);
         }
     }
