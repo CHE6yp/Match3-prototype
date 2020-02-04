@@ -33,10 +33,10 @@ public class UIManager : MonoBehaviour
         DrawField();
     }
 
-    public void DrawField()
+    void DrawField()
     {
         buttons = new List<GameObject>();
-        foreach (Item item in GameManager.instance.field.items)
+        foreach (Item item in GameManager.instance.field.Items)
         {
             SetupItemButton(item);
         }
@@ -56,12 +56,12 @@ public class UIManager : MonoBehaviour
     }
     
     //Switching needs to be in IItemVisual
-    public void SwitchItemButtons(Item from, Item to)
+    void SwitchItemButtons(Item from, Item to)
     {
         StartCoroutine(SwitchItemButtons(from.visualObject, to.visualObject));
     }
 
-    public IEnumerator SwitchItemButtons(IItemVisual from, IItemVisual to)
+    IEnumerator SwitchItemButtons(IItemVisual from, IItemVisual to)
     {
         Vector2 path = to.transform.GetComponent<RectTransform>().anchoredPosition - from.transform.GetComponent<RectTransform>().anchoredPosition;
 
@@ -74,13 +74,13 @@ public class UIManager : MonoBehaviour
         GameManager.instance.CheckMatches();
     }
 
-    public void ScoreMatches(List<MatchData> matches)
+    void ScoreMatches(List<MatchData> matches)
     {
         StartCoroutine(ScoreMatchesC(matches));
         Camera.main.GetComponent<AudioSource>().Play();//for now, this will do. TODO make an audioManager
     }
 
-    public IEnumerator ScoreMatchesC(List<MatchData> matches)
+    IEnumerator ScoreMatchesC(List<MatchData> matches)
     {
         coroutineCounter = matches.Count;
         foreach (MatchData match in matches)
@@ -89,7 +89,7 @@ public class UIManager : MonoBehaviour
         }
         while (coroutineCounter > 0) yield return null;
 
-        foreach (Item item in GameManager.instance.field.items)
+        foreach (Item item in GameManager.instance.field.Items)
         {
             item.visualObject.UpdatePosition();
             if (buildingDropInterval != 0)
@@ -103,7 +103,7 @@ public class UIManager : MonoBehaviour
 
     }
 
-    public IEnumerator ScoreMatch(MatchData match)
+    IEnumerator ScoreMatch(MatchData match)
     {
         foreach (Item item in match.items)
         {
@@ -114,15 +114,15 @@ public class UIManager : MonoBehaviour
         coroutineCounter--;
     }
 
-    public void DropItemButtons()
+    void DropItemButtons()
     {
         StartCoroutine(DropItemButtonsC());
     }
 
-    public IEnumerator DropItemButtonsC()
+    IEnumerator DropItemButtonsC()
     {
-        coroutineCounter = GameManager.instance.field.items.Count;
-        foreach (Item item in GameManager.instance.field.items)
+        coroutineCounter = GameManager.instance.field.Items.Count;
+        foreach (Item item in GameManager.instance.field.Items)
         {
             StartCoroutine(DropItemButton(item));
         }
@@ -131,7 +131,7 @@ public class UIManager : MonoBehaviour
         GameManager.instance.CheckMatches();
     }
 
-    public IEnumerator DropItemButton(Item item)
+    IEnumerator DropItemButton(Item item)
     {
         Vector2 path = item.coordinates * 30 - item.visualObject.transform.GetComponent<RectTransform>().anchoredPosition;
         for (int i = 0; i < 25; i++)
@@ -143,7 +143,7 @@ public class UIManager : MonoBehaviour
         coroutineCounter--;
     }
 
-    public IEnumerator ScoreTextChanged()
+    IEnumerator ScoreTextChanged()
     {
         for (int i = 0; i < 5; i++)
         {
@@ -155,5 +155,10 @@ public class UIManager : MonoBehaviour
             scoreText.fontSize -= 10;
             yield return new WaitForSeconds(0.02f);
         }
+    }
+
+    public void ExitGame()
+    {
+        Application.Quit();
     }
 }

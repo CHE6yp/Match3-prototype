@@ -4,11 +4,12 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public class Field
+public class Field : IField
 {
     public static Field instance;
     [SerializeField]
     public List<Item> items;
+    public List<Item> Items { get { return items; } set { items = value; } }
     public int width;
     public int height;
 
@@ -16,7 +17,7 @@ public class Field
     public int score { get { return _score; } set { _score = value; scoreChanged?.Invoke(); } }
 
     public delegate void FieldEvent();
-    public FieldEvent checkedMatches;
+    public event FieldEvent checkedMatches;
     public FieldEvent droppedItems;
     public FieldEvent scoreChanged;
     public delegate void SwitchItemsEvent(Item from, Item to);
@@ -27,9 +28,7 @@ public class Field
     public Item this[int x, int y]
     {
         get { return items.Where(a => a.coordinates == new Vector2(x, y)).First(); }
-        //set { items.Where(a=>a.coordinates == new Vector2(x, y)) = value; }
     }
-    //public int Length { get { return items.Length; } }
 
     public Field(int width, int height)
     {
@@ -49,22 +48,16 @@ public class Field
     public Field(int size) : this(size, size) { }
     public Field() : this(8) { }
 
-    //TODO rewrite to foreach loop somehow
+    //TODO rewrite this to be more useful
     override public string ToString()
     {
         string result = "";
-        for (int y = 0; y < height; y++)
-        {
-            for (int x = 0; x < width; x++)
-            {
-                result += items.Where(a => a.coordinates == new Vector2(x, y)).First().ToString();
-            }
-            result += "\n";
-        }
+        foreach (Item item in items.OrderBy((i) => i.coordinates.x).OrderBy((i) => i.coordinates.y))
+            result += item.ToString()+(item.coordinates.x==(width-1)?"\n":"");
         return result;
     }
 
-    public Item CreateItem(int id, Vector2 coordinates)
+    Item CreateItem(int id, Vector2 coordinates)
     {
         string type;
         switch (id)
@@ -112,8 +105,6 @@ public class Field
         from.MoveTo(to.coordinates);
         to.MoveTo(temp);
         itemsSwitched?.Invoke(from, to);
-
-        //CheckMatches();
     }
 
     public void CheckMatches()
@@ -145,7 +136,7 @@ public class Field
         checkedMatches?.Invoke();
     }
 
-    public MatchData CheckMatchRecursive(Item item, MatchData matchData)
+    MatchData CheckMatchRecursive(Item item, MatchData matchData)
     {
         if (item.checkedForMatch || item.type != matchData.type)
             return matchData;
@@ -167,7 +158,7 @@ public class Field
         return matchData;
     }
 
-    public MatchData CheckMatchHorizontal(Item item, MatchData matchData)
+    MatchData CheckMatchHorizontal(Item item, MatchData matchData)
     {
         if (item.checkedForMatchHorizontal || item.type != matchData.type)
             return matchData;
@@ -187,7 +178,7 @@ public class Field
         return matchData;
     }
 
-    public MatchData CheckMatchVertical(Item item, MatchData matchData)
+    MatchData CheckMatchVertical(Item item, MatchData matchData)
     {
         if (item.checkedForMatchVertical || item.type != matchData.type)
             return matchData;
@@ -207,7 +198,7 @@ public class Field
         return matchData;
     }
 
-    public void CombineMatches(List<MatchData> matches)
+    void CombineMatches(List<MatchData> matches)
     {
         for (int i = 0; i < matches.Count; i++)
         {
@@ -233,21 +224,17 @@ public class Field
         droppedItems?.Invoke();
     }
 
-    public void ScoreMatches(List<MatchData> matches)
+    void ScoreMatches(List<MatchData> matches)
     {
-
         List<Item> scoredItems = new List<Item>();
+        //3 foreach loops, cuz this needed to be in an order;
         foreach (MatchData match in matches)
         {
-            //Debug.Log(match);
             match.ScoreMatch();
             scoredItems.AddRange(match.items);
         }
         foreach (Item item in scoredItems)
-        {
             item.MoveTo(new Vector2(item.coordinates.x, Field.instance.height - 1 + item.fallingSteps));
-            //item.fallingSteps = scoredItems.Where((a)=>(a.coordinates.x == item.coordinates.x)).Count();
-        }
         foreach (Item item in scoredItems)
             item.fallingSteps = scoredItems.Where((a) => (a.coordinates.x == item.coordinates.x)).Count();
 
