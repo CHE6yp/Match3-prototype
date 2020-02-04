@@ -26,6 +26,8 @@ public class Item
     public ItemAction dropped;//not used
 
     public bool checkedForMatch = false;
+    public bool checkedForMatchHorizontal = false;
+    public bool checkedForMatchVertical = false;
     public int fallingSteps = 0;
     
     public Item(string t)

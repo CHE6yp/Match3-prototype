@@ -371,7 +371,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   canvas: {fileID: 900872232}
   panel: {fileID: 1760444561}
-  buttonPrefab: {fileID: 902158058789332027, guid: 33c4722160fddd34a94377211fdac777,
+  buttonPrefab: {fileID: 902158058789332027, guid: b6f7cfc677e0f4446805e1f422cb45b4,
     type: 3}
   buttons: []
   selectedButton: {fileID: 0}

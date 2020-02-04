@@ -10,7 +10,6 @@ public class UIManager : MonoBehaviour
     public RectTransform panel;
     public GameObject buttonPrefab;
     public List<GameObject> buttons;
-    public GameObject selectedButton;
 
     public Text scoreText;
 
