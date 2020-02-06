@@ -9,8 +9,6 @@ public class Item3D : MonoBehaviour, IItemVisual
     public new Transform transform { get; private set; }
 
     public static Item3D selectedButton;
-    public RectTransform rectTransform;
-    public Button buttonComponent;
 
     public void Setup(Item item)
     {
@@ -18,11 +16,11 @@ public class Item3D : MonoBehaviour, IItemVisual
         this.item = item;
         item.visualObject = this;
 
-        rectTransform.anchoredPosition = item.coordinates * 30;
+        transform.position = item.coordinates * 30;
 
         UpdateLook();
 
-        buttonComponent.onClick.AddListener(Select);
+        //buttonComponent.onClick.AddListener(Select);
 
         //item.droppedTo += (coordinates) => { Drop(coordinates); };
         //item.scored += Score;
@@ -41,22 +39,22 @@ public class Item3D : MonoBehaviour, IItemVisual
             case "E": i=4; break;
         }
 
-        transform.GetChild(1).GetComponent<MeshFilter>().mesh = UIManager.instance.buttonMeshes[i];
-        transform.GetChild(1).GetComponent<MeshRenderer>().material = UIManager.instance.buttonMaterials[i];
+        transform.GetChild(0).GetComponent<MeshFilter>().mesh = UIManager.instance.buttonMeshes[i];
+        transform.GetChild(0).GetComponent<MeshRenderer>().material = UIManager.instance.buttonMaterials[i];
 
-        transform.GetChild(2).GetComponent<ParticleSystem>().startColor = transform.GetChild(1).GetComponent<MeshRenderer>().material.color;
-        transform.GetChild(2).GetChild(0).GetComponent<ParticleSystem>().startColor = transform.GetChild(1).GetComponent<MeshRenderer>().material.color;
+        transform.GetChild(1).GetComponent<ParticleSystem>().startColor = transform.GetChild(0).GetComponent<MeshRenderer>().material.color;
+        transform.GetChild(1).GetChild(0).GetComponent<ParticleSystem>().startColor = transform.GetChild(0).GetComponent<MeshRenderer>().material.color;
     }
     
     public void UpdatePosition()
     {
-        transform.GetComponent<RectTransform>().anchoredPosition = item.coordinates * 30;
+        transform.position = item.coordinates * 30;
     }
 
     //not really used, but let's leave it
     public void MoveTo(Vector2 coordinates)
     {
-        transform.GetComponent<RectTransform>().anchoredPosition = coordinates * 30;
+        transform.position = coordinates * 30;
     }
 
     //todo make drops a couroutine and use this one
@@ -73,7 +71,7 @@ public class Item3D : MonoBehaviour, IItemVisual
         if (!GameManager.instance.SelectItem(item))
         {
             selectedButton = this;
-            transform.GetChild(2).GetComponent<ParticleSystem>().Play(false);
+            transform.GetChild(1).GetComponent<ParticleSystem>().Play(false);
         }
         else
         {
@@ -83,11 +81,11 @@ public class Item3D : MonoBehaviour, IItemVisual
 
     public void Deselect()
     {
-        transform.GetChild(2).GetComponent<ParticleSystem>().Stop();
+        transform.GetChild(1).GetComponent<ParticleSystem>().Stop();
     }
 
     public void Score()
     {
-        transform.GetChild(2).GetChild(0).GetComponent<ParticleSystem>().Play(true);
+        transform.GetChild(1).GetChild(0).GetComponent<ParticleSystem>().Play(true);
     }
 }

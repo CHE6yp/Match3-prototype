@@ -52,7 +52,7 @@ public class ItemButton : MonoBehaviour, IItemVisual
         MoveTo(coordinates);
     }
 
-    void Select()
+    public void Select()
     {
         if (selectedButton != null) selectedButton.Deselect();
 

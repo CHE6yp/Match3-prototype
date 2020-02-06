@@ -8,6 +8,7 @@ public interface IItemVisual
     Transform transform { get; }
 
     void Setup(Item item);
+    void Select();
     void UpdateLook();
     void UpdatePosition();
     void MoveTo(Vector2 coordinates);

@@ -48,7 +48,7 @@ public class UIManager : MonoBehaviour
 
     void SetupItemButton(Item item)
     {
-        GameObject button = Instantiate(buttonPrefab, panel);
+        GameObject button = Instantiate(buttonPrefab);
 
         buttons.Add(button);
 
@@ -63,12 +63,12 @@ public class UIManager : MonoBehaviour
 
     IEnumerator SwitchItemButtons(IItemVisual from, IItemVisual to)
     {
-        Vector2 path = to.transform.GetComponent<RectTransform>().anchoredPosition - from.transform.GetComponent<RectTransform>().anchoredPosition;
+        Vector3 path = to.transform.position - from.transform.position;
 
         for (int i = 0; i < 25; i++)
         {
-            from.transform.GetComponent<RectTransform>().anchoredPosition += path * 0.04f;
-            to.transform.GetComponent<RectTransform>().anchoredPosition -= path * 0.04f;
+            from.transform.position += path * 0.04f;
+            to.transform.position -= path * 0.04f;
             yield return new WaitForSeconds(0.02f);
         }
         GameManager.instance.CheckMatches();
@@ -133,10 +133,10 @@ public class UIManager : MonoBehaviour
 
     IEnumerator DropItemButton(Item item)
     {
-        Vector2 path = item.coordinates * 30 - item.visualObject.transform.GetComponent<RectTransform>().anchoredPosition;
+        Vector3 path = (Vector3)item.coordinates * 30 - item.visualObject.transform.position;
         for (int i = 0; i < 25; i++)
         {
-            item.visualObject.transform.GetComponent<RectTransform>().GetComponent<RectTransform>().anchoredPosition += path * 0.04f;
+            item.visualObject.transform.position += path * 0.04f;
 
             yield return new WaitForSeconds(0.02f);
         }

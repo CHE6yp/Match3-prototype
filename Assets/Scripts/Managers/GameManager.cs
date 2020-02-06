@@ -21,8 +21,6 @@ public class GameManager : MonoBehaviour
 
     public bool SelectItem(Item item)
     {
-        Debug.Log("Selected " + item.coordinates);
-        Debug.Log(selectedItem);
         if (selectedItem == null || selectedItem == item || Vector2.Distance(selectedItem.coordinates, item.coordinates) > 1)
         {
             selectedItem = item;
