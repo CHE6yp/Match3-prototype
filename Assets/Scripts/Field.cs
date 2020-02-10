@@ -107,6 +107,15 @@ public class Field : IField
         itemsSwitched?.Invoke(from, to);
     }
 
+    public void SlideItem(Item item, Vector2 destination)
+    {
+        Item to = items.Where((i) => i.coordinates == item.coordinates + destination).First();
+        if (to != null)
+        {
+            SwitchItems(item, to);
+        }
+    }
+
     public void CheckMatches()
     {
         List<MatchData> matches = new List<MatchData>();

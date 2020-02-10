@@ -57,10 +57,18 @@ public class PlayerInput : MonoBehaviour
                         if (Mathf.Abs(direction.normalized.x)>Mathf.Abs(direction.normalized.y))
                         {
                             //if x<0 left, x>0 right
+                            if (direction.x > 0)
+                                GameManager.instance.field.SlideItem(GameManager.instance.selectedItem, new Vector2(1,0));
+                            else
+                                GameManager.instance.field.SlideItem(GameManager.instance.selectedItem, new Vector2(-1, 0));
                         }
                         if (Mathf.Abs(direction.normalized.x)<Mathf.Abs(direction.normalized.y))
                         {
                             //if y<0 down, y>0 up
+                            if (direction.y > 0)
+                                GameManager.instance.field.SlideItem(GameManager.instance.selectedItem, new Vector2(0, 1));
+                            else
+                                GameManager.instance.field.SlideItem(GameManager.instance.selectedItem, new Vector2(0, -1));
                         }
                     }
                     break;
