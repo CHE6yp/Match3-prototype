@@ -23,5 +23,7 @@ public class PlayerInput : MonoBehaviour
                 hit.collider.GetComponent<IItemVisual>()?.Select();
             Debug.DrawRay(ray.origin, ray.direction*100, Color.yellow);
         }
+
+
     }
 }
