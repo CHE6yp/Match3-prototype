@@ -6,6 +6,7 @@
 		_MainTex ("Albedo (RGB)", 2D) = "white" {}
 		_Glossiness ("Smoothness", Range(0,1)) = 0.5
 		_Metallic ("Metallic", Range(0,1)) = 0.0
+		_Emission ("Emission", Color) = (1,1,1,1)
 	}
 	SubShader {
 		Tags { "RenderType"="Opaque" }
@@ -34,6 +35,7 @@
 		half _Glossiness;
 		half _Metallic;
 		fixed4 _Color;
+		fixed4 _Emission;
 
 		void surf (Input IN, inout SurfaceOutputStandard o) {
 
@@ -45,6 +47,7 @@
 			o.Metallic = _Metallic;
 			o.Smoothness = _Glossiness;
 			o.Alpha = c.a;
+			o.Emission = _Emission;
 		}
 		ENDCG
 	} 
