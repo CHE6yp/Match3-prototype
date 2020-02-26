@@ -147,6 +147,7 @@ public class UIManager : MonoBehaviour
 
             yield return new WaitForSeconds((1 / coroutineFrames)*coroutineTime/2);//falling frame time 
         }
+        GameObject.Find("debug2").GetComponent<Text>().text = coroutineFrames+"; "+coroutineTime+"; "+ (1 / coroutineFrames) * coroutineTime / 2;
         coroutineCounter--;
     }
 
