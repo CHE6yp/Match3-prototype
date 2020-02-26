@@ -137,11 +137,13 @@ public class UIManager : MonoBehaviour
     IEnumerator DropItemButton(Item item)
     {
         Vector3 path = (Vector3)item.coordinates * itemInterval - item.visualObject.transform.position;
-        for (int i = 0; i < 25; i++)
-        {
-            item.visualObject.transform.position += path * 0.04f;
 
-            yield return new WaitForSeconds(0.02f);
+        float droppingFrames = 25;
+        for (int i = 0; i < droppingFrames; i++)
+        {
+            item.visualObject.transform.position += path * 1/droppingFrames;
+
+            yield return new WaitForSeconds(0.01f);//falling frame time 
         }
         coroutineCounter--;
     }
