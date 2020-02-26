@@ -9,6 +9,7 @@ public class Item3D : MonoBehaviour, IItemVisual
     public new Transform transform { get; private set; }
 
     public static Item3D selectedButton;
+    public float interval = 3;
 
     public void Setup(Item item)
     {
@@ -16,7 +17,7 @@ public class Item3D : MonoBehaviour, IItemVisual
         this.item = item;
         item.visualObject = this;
 
-        transform.position = item.coordinates * 30;
+        UpdatePosition();
 
         UpdateLook();
 
@@ -48,13 +49,13 @@ public class Item3D : MonoBehaviour, IItemVisual
     
     public void UpdatePosition()
     {
-        transform.position = item.coordinates * 30;
+        transform.position = item.coordinates * interval;
     }
 
     //not really used, but let's leave it
     public void MoveTo(Vector2 coordinates)
     {
-        transform.position = coordinates * 30;
+        transform.position = coordinates * interval;
     }
 
     //todo make drops a couroutine and use this one

@@ -22,6 +22,8 @@ public class UIManager : MonoBehaviour
     public float buildingDropInterval = 0;
     public float scoreToDropInterval = 0;
 
+    public float itemInterval = 3; //AAAAAAAAR TODO GET THIS SHIT FIGURED OUT
+
     private void Awake()
     {
         instance = this;
@@ -131,9 +133,10 @@ public class UIManager : MonoBehaviour
         GameManager.instance.CheckMatches();
     }
 
+    //why is this here?! Wtf
     IEnumerator DropItemButton(Item item)
     {
-        Vector3 path = (Vector3)item.coordinates * 30 - item.visualObject.transform.position;
+        Vector3 path = (Vector3)item.coordinates * itemInterval - item.visualObject.transform.position;
         for (int i = 0; i < 25; i++)
         {
             item.visualObject.transform.position += path * 0.04f;
