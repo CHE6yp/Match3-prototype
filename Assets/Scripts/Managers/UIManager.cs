@@ -24,6 +24,9 @@ public class UIManager : MonoBehaviour
 
     public float itemInterval = 3; //AAAAAAAAR TODO GET THIS SHIT FIGURED OUT
 
+    public float coroutineFrames = 25;
+    public float coroutineTime = 0.5f;
+
     private void Awake()
     {
         instance = this;
@@ -67,11 +70,11 @@ public class UIManager : MonoBehaviour
     {
         Vector3 path = to.transform.position - from.transform.position;
 
-        for (int i = 0; i < 25; i++)
+        for (int i = 0; i < coroutineFrames; i++)
         {
-            from.transform.position += path * 0.04f;
-            to.transform.position -= path * 0.04f;
-            yield return new WaitForSeconds(0.02f);
+            from.transform.position += path * 1/ coroutineFrames;
+            to.transform.position -= path * 1 / coroutineFrames;
+            yield return new WaitForSeconds((1 / coroutineFrames) * coroutineTime/2);
         }
         GameManager.instance.CheckMatches();
     }
@@ -112,7 +115,7 @@ public class UIManager : MonoBehaviour
             item.visualObject.Score();
         }
 
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(coroutineTime);
         coroutineCounter--;
     }
 
@@ -138,12 +141,11 @@ public class UIManager : MonoBehaviour
     {
         Vector3 path = (Vector3)item.coordinates * itemInterval - item.visualObject.transform.position;
 
-        float droppingFrames = 25;
-        for (int i = 0; i < droppingFrames; i++)
+        for (int i = 0; i < coroutineFrames; i++)
         {
-            item.visualObject.transform.position += path * 1/droppingFrames;
+            item.visualObject.transform.position += path * 1/ coroutineFrames;
 
-            yield return new WaitForSeconds(0.01f);//falling frame time 
+            yield return new WaitForSeconds((1 / coroutineFrames)*coroutineTime/2);//falling frame time 
         }
         coroutineCounter--;
     }

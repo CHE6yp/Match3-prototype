@@ -5339,6 +5339,8 @@ MonoBehaviour:
   buildingDropInterval: 0
   scoreToDropInterval: 0
   itemInterval: 3
+  coroutineFrames: 25
+  coroutineTime: 0.5
 --- !u!4 &710954448
 Transform:
   m_ObjectHideFlags: 0
