@@ -90,10 +90,10 @@ public class UIManager : MonoBehaviour
     {
         Vector3 path = to.transform.position - from.transform.position;
 
-        for (int i = 0; i < coroutineFrames; i++)
+        for (int i = 0; i < coroutineFrames/2; i++)
         {
-            from.transform.position += path * 1/ coroutineFrames;
-            to.transform.position -= path * 1 / coroutineFrames;
+            from.transform.position += path * 1/ (coroutineFrames/2);
+            to.transform.position -= path * 1 / (coroutineFrames/2);
             yield return new WaitForSeconds((1 / coroutineFrames) * coroutineTime/2);
         }
         GameManager.instance.CheckMatches();
@@ -135,7 +135,7 @@ public class UIManager : MonoBehaviour
             item.visualObject.Score();
         }
 
-        yield return new WaitForSeconds(coroutineTime);
+        yield return new WaitForSeconds(coroutineTime/2);
         coroutineCounter--;
     }
 
@@ -165,9 +165,9 @@ public class UIManager : MonoBehaviour
         {
             item.visualObject.transform.position += path * 1/ coroutineFrames;
 
-            yield return new WaitForSeconds((1 / coroutineFrames)*coroutineTime/2);//falling frame time 
+            yield return new WaitForSeconds((1 / coroutineFrames)*coroutineTime);//falling frame time 
         }
-        GameObject.Find("debug2").GetComponent<Text>().text = coroutineFrames+"; "+coroutineTime+"; "+ (1 / coroutineFrames) * coroutineTime / 2;
+        GameObject.Find("debug2").GetComponent<Text>().text = coroutineFrames+"; "+coroutineTime+"; "+ (1 / coroutineFrames) * coroutineTime * coroutineFrames ;
         coroutineCounter--;
     }
 

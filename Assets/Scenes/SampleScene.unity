@@ -5426,6 +5426,7 @@ MonoBehaviour:
   buttons: []
   scoreText: {fileID: 29169954}
   fpsText: {fileID: 13803104}
+  updateRateSeconds: 4
   buttonMeshes:
   - {fileID: 4300000, guid: a59faa6df8bd9cd4c8779604face71a1, type: 3}
   - {fileID: 4300000, guid: fce0ecff534816b49af71ef31033c259, type: 3}
@@ -5442,7 +5443,7 @@ MonoBehaviour:
   scoreToDropInterval: 0
   itemInterval: 3
   coroutineFrames: 25
-  coroutineTime: 0.5
+  coroutineTime: 0.01
 --- !u!4 &710954448
 Transform:
   m_ObjectHideFlags: 0
