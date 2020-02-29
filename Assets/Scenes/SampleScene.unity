@@ -351,6 +351,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca1f7ee337c59184da30faa46994c2f7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  buttonPrefab: {fileID: 902158058789332027, guid: b6f7cfc677e0f4446805e1f422cb45b4,
+    type: 3}
   selectedItem:
     type: 
     scoreAmount: 0
@@ -360,6 +362,12 @@ MonoBehaviour:
     checkedForMatchHorizontal: 0
     checkedForMatchVertical: 0
     fallingSteps: 0
+  coroutineCounter: 0
+  itemInterval: 3
+  coroutineFrames: 25
+  coroutineTime: 0.5
+  buildingDropInterval: 0
+  scoreToDropInterval: 0
 --- !u!4 &77145237
 Transform:
   m_ObjectHideFlags: 0
@@ -5421,9 +5429,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   canvas: {fileID: 900872232}
   panel: {fileID: 0}
-  buttonPrefab: {fileID: 902158058789332027, guid: b6f7cfc677e0f4446805e1f422cb45b4,
-    type: 3}
-  buttons: []
   scoreText: {fileID: 29169954}
   fpsText: {fileID: 13803104}
   updateRateSeconds: 4
@@ -5439,11 +5444,6 @@ MonoBehaviour:
   - {fileID: 2100000, guid: efe6fc25350958c479cd9fcde7e565f9, type: 2}
   - {fileID: 2100000, guid: 6a6944f4904547e4fb039789da5fcd85, type: 2}
   - {fileID: 2100000, guid: 5a9e6cf91cbfc1a4fbc9470cca37b97a, type: 2}
-  buildingDropInterval: 0
-  scoreToDropInterval: 0
-  itemInterval: 3
-  coroutineFrames: 25
-  coroutineTime: 0.01
 --- !u!4 &710954448
 Transform:
   m_ObjectHideFlags: 0
@@ -5880,7 +5880,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54a54f07eefd27d4db6bd02396d0d767, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemInterval: 3
   margin: 5
 --- !u!1 &1048527370
 GameObject:
