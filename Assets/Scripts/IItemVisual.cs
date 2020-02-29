@@ -9,6 +9,7 @@ public interface IItemVisual
 
     void Setup(Item item);
     void Select();
+    void Deselect();
     void UpdateLook();
     void UpdatePosition();
     void MoveTo(Vector2 coordinates);

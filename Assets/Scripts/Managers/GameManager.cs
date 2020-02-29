@@ -19,20 +19,20 @@ public class GameManager : MonoBehaviour
         Debug.Log(field);
     }
 
-    public bool SelectItem(Item item)
-    {
-        if (selectedItem == null || selectedItem == item || Vector2.Distance(selectedItem.coordinates, item.coordinates) > 1)
-        {
-            selectedItem = item;
-            return false;
-        }
-        else
-        {
-            field.SwitchItems(selectedItem, item);
-            selectedItem = null;
-            return true;
-        }
-    }
+    //public bool SelectItem(Item item)
+    //{
+    //    if (selectedItem == null || selectedItem == item || Vector2.Distance(selectedItem.coordinates, item.coordinates) > 1)
+    //    {
+    //        selectedItem = item;
+    //        return false;
+    //    }
+    //    else
+    //    {
+    //        field.SwitchItems(selectedItem, item);
+    //        selectedItem = null;
+    //        return true;
+    //    }
+    //}
 
     public void CheckMatches()
     {

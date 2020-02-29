@@ -8,6 +8,8 @@ public class PlayerInput : MonoBehaviour
     public Vector2 startPos;
     public Vector2 direction;
     public bool directionChosen;
+
+    public IItemVisual selectedItem;
     // Start is called before the first frame update
     void Start()
     {
@@ -17,16 +19,20 @@ public class PlayerInput : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Mouse0))
-        {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
+        if (Application.platform == RuntimePlatform.WindowsPlayer)
+            if (Input.GetKeyDown(KeyCode.Mouse0))
+            {
+                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                RaycastHit hit;
 
-            if (Physics.Raycast(ray, out hit, 100))
-                //Debug.Log(hit.collider.gameObject);
-                hit.collider.GetComponent<IItemVisual>()?.Select();
-            Debug.DrawRay(ray.origin, ray.direction*100, Color.yellow);
-        }
+                if (Physics.Raycast(ray, out hit, 100))
+                {
+                    //Debug.Log(hit.collider.gameObject);
+                    selectedItem = hit.collider.GetComponent<IItemVisual>();
+                    selectedItem?.Select();
+                }
+                Debug.DrawRay(ray.origin, ray.direction*100, Color.yellow);
+            }
 
         if (Input.touchCount > 0)
         {
@@ -38,6 +44,18 @@ public class PlayerInput : MonoBehaviour
                 // Record initial touch position.
                 case TouchPhase.Began:
                     startPos = touch.position;
+
+                    Ray ray = Camera.main.ScreenPointToRay(startPos);
+                    RaycastHit hit;
+
+                    if (Physics.Raycast(ray, out hit, 100))
+                    {
+                        //Debug.Log(hit.collider.gameObject);
+                        selectedItem = hit.collider.GetComponent<IItemVisual>();
+                        selectedItem?.Select();
+                    }
+                    Debug.DrawRay(ray.origin, ray.direction * 100, Color.yellow);
+
                     directionChosen = false;
                     break;
 
@@ -58,19 +76,21 @@ public class PlayerInput : MonoBehaviour
                         {
                             //if x<0 left, x>0 right
                             if (direction.x > 0)
-                                GameManager.instance.field.SlideItem(GameManager.instance.selectedItem, new Vector2(1,0));
+                                GameManager.instance.field.SlideItem(Item3D.selectedButton.item, new Vector2(1,0));
                             else
-                                GameManager.instance.field.SlideItem(GameManager.instance.selectedItem, new Vector2(-1, 0));
+                                GameManager.instance.field.SlideItem(Item3D.selectedButton.item, new Vector2(-1, 0));
                         }
                         if (Mathf.Abs(direction.normalized.x)<Mathf.Abs(direction.normalized.y))
                         {
                             //if y<0 down, y>0 up
                             if (direction.y > 0)
-                                GameManager.instance.field.SlideItem(GameManager.instance.selectedItem, new Vector2(0, 1));
+                                GameManager.instance.field.SlideItem(Item3D.selectedButton.item, new Vector2(0, 1));
                             else
-                                GameManager.instance.field.SlideItem(GameManager.instance.selectedItem, new Vector2(0, -1));
+                                GameManager.instance.field.SlideItem(Item3D.selectedButton.item, new Vector2(0, -1));
                         }
                     }
+
+                    selectedItem.Deselect();
                     break;
             }
         }

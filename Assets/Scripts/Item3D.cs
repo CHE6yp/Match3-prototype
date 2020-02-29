@@ -67,21 +67,24 @@ public class Item3D : MonoBehaviour, IItemVisual
 
     public void Select()
     {
-        if (selectedButton != null) selectedButton.Deselect();
-        //todo change gamemanage.inst.SelectItem(item) to item.Select();
-        if (!GameManager.instance.SelectItem(item))
-        {
-            selectedButton = this;
-            transform.GetChild(1).GetComponent<ParticleSystem>().Play(false);
-        }
-        else
-        {
-            selectedButton = null;
-        }
+        //if (selectedButton != null) selectedButton.Deselect();
+        ////todo change gamemanage.inst.SelectItem(item) to item.Select();
+        //if (!GameManager.instance.SelectItem(item))
+        //{
+        //    selectedButton = this;
+        //    transform.GetChild(1).GetComponent<ParticleSystem>().Play(true);
+        //}
+        //else
+        //{
+        //    selectedButton = null;
+        //}
+        selectedButton = this;
+        transform.GetChild(1).GetComponent<ParticleSystem>().Play(true);
     }
 
     public void Deselect()
     {
+        selectedButton = null;
         transform.GetChild(1).GetComponent<ParticleSystem>().Stop();
     }
 
