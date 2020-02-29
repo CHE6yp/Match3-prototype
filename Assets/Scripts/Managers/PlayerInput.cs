@@ -91,6 +91,7 @@ public class PlayerInput : MonoBehaviour
                     }
 
                     selectedItem.Deselect();
+                    direction = Vector2.zero;
                     break;
             }
         }
