@@ -7,7 +7,7 @@ public class GameManager : MonoBehaviour
     public static GameManager instance;
     public Field field;
 
-    public GameObject buttonPrefab;
+    public GameObject itemVisualPrefab;
 
     public Item selectedItem;
 
@@ -40,11 +40,11 @@ public class GameManager : MonoBehaviour
     {
         foreach (Item item in field.Items)
         {
-            SetupItemButton(item);
+            SetupItemVisual(item);
         }
-        field.itemsSwitched += (from, to) => { StartCoroutine(SwitchItemButtons(from.visualObject, to.visualObject)); };
-        field.scoredMatches += (matches) => { StartCoroutine(ScoreMatchesC(matches)); };
-        field.droppedItems += () => StartCoroutine(DropItemButtonsC());
+        field.itemsSwitched += (from, to) => { StartCoroutine(SwitchItems(from.visualObject, to.visualObject)); };
+        field.scoredMatches += (matches) => { StartCoroutine(ScoreMatches(matches)); };
+        field.droppedItems += () => StartCoroutine(DropItems());
         //TODO move somewhere somehow
         field.scoreChanged += () => {
             UIManager.instance.scoreText.text = "$" + field.score;
@@ -52,14 +52,14 @@ public class GameManager : MonoBehaviour
         };
     }
 
-    void SetupItemButton(Item item)
+    void SetupItemVisual(Item item)
     {
-        GameObject button = Instantiate(buttonPrefab);
+        GameObject button = Instantiate(itemVisualPrefab);
         button.GetComponent<IItemVisual>().Setup(item);
     }
 
     //Switching needs to be in IItemVisual (or not?)
-    IEnumerator SwitchItemButtons(IItemVisual from, IItemVisual to)
+    IEnumerator SwitchItems(IItemVisual from, IItemVisual to)
     {
         Vector3 path = to.transform.position - from.transform.position;
 
@@ -72,7 +72,7 @@ public class GameManager : MonoBehaviour
         field.CheckMatches();
     }
 
-    IEnumerator ScoreMatchesC(List<MatchData> matches)
+    IEnumerator ScoreMatches(List<MatchData> matches)
     {
         Camera.main.GetComponent<AudioSource>().Play();//for now, this will do. TODO make an audioManager
         coroutineCounter = matches.Count;
@@ -88,7 +88,6 @@ public class GameManager : MonoBehaviour
             if (buildingDropInterval != 0)
                 yield return new WaitForSeconds(buildingDropInterval);
             item.visualObject.UpdateLook();
-            //item.visualObject.Deselect(); does it work if i comment this? Seems to!
         }
         yield return new WaitForSeconds(scoreToDropInterval);
         //Here proceed to the next step
@@ -122,7 +121,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    IEnumerator DropItemButtonsC()
+    IEnumerator DropItems()
     {
         coroutineCounter = field.Items.Count;
         foreach (Item item in field.Items)

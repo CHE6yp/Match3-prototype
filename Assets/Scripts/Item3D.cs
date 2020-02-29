@@ -103,12 +103,6 @@ public class Item3D : MonoBehaviour, IItemVisual
 
     }
 
-
-    public void Drop(Vector2 coordinates)
-    {
-        MoveTo(coordinates);
-    }
-
     public void Select()
     {
         if (Application.platform == RuntimePlatform.WindowsEditor)
