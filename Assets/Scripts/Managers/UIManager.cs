@@ -146,12 +146,12 @@ public class UIManager : MonoBehaviour
 
     IEnumerator DropItemButtonsC()
     {
-        coroutineCounter = GameManager.instance.field.Items.Count;
+        GameManager.instance.coroutineCounter = GameManager.instance.field.Items.Count;
         foreach (Item item in GameManager.instance.field.Items)
         {
-            StartCoroutine(DropItemButton(item));
+            StartCoroutine(item.visualObject.Drop());
         }
-        while (coroutineCounter > 0) yield return null;
+        while (GameManager.instance.coroutineCounter > 0) yield return null;
 
         GameManager.instance.CheckMatches();
     }

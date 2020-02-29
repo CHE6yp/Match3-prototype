@@ -13,6 +13,6 @@ public interface IItemVisual
     void UpdateLook();
     void UpdatePosition();
     void MoveTo(Vector2 coordinates);
-    void Drop();
+    IEnumerator Drop();
     void Score();
 }

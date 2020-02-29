@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -10,6 +11,12 @@ public class Item3D : MonoBehaviour, IItemVisual
 
     public static Item3D selectedButton;
     public float interval = 3;
+    public TextMesh debugText;
+
+    private void Update()
+    {
+        debugText.text = item.coordinates.y.ToString() + '\n' + (transform.position.y/interval - item.coordinates.y);
+    }
 
     public void Setup(Item item)
     {
@@ -58,8 +65,45 @@ public class Item3D : MonoBehaviour, IItemVisual
         transform.position = coordinates * interval;
     }
 
-    //todo make drops a couroutine and use this one
-    public void Drop() { }
+    /// <summary>
+    /// Процедурно создаем анимацию падения предмета в зависимости от высоты. И дропаем
+    /// </summary>
+    public IEnumerator Drop()
+    {
+        Debug.Log("Drop! "+ (transform.position.y / interval - item.coordinates.y).ToString());
+        //Animator animator = GetComponent<Animator>();
+        Animation anim = GetComponent<Animation>();
+        //StartCoroutine(Drop(animator));
+
+        AnimationCurve curve;
+
+        AnimationClip clip = new AnimationClip();
+        clip.legacy = true;
+
+        Keyframe[] keys;
+        keys = new Keyframe[2];
+        keys[0] = new Keyframe(0.0f, transform.position.y);
+        keys[1] = new Keyframe(0.5f, item.coordinates.y*interval);
+        //keys[2] = new Keyframe(2.0f, 0.0f);
+        curve = new AnimationCurve(keys);
+        clip.SetCurve("", typeof(Transform), "localPosition.x", AnimationCurve.Constant(0,0,transform.position.x));
+        clip.SetCurve("", typeof(Transform), "localPosition.y", curve);
+
+        anim.AddClip(clip, "tmp");
+        anim.Play("tmp");
+        //need to wait for all animations
+        while (anim.isPlaying)
+            yield return null;
+
+        GameManager.instance.coroutineCounter--;
+
+        //anim.RemoveClip("tmp");
+        //anim.AddClip(clip, clip.name);
+        //anim.Play(clip.name);
+
+    }
+
+
     public void Drop(Vector2 coordinates)
     {
         MoveTo(coordinates);
@@ -67,17 +111,21 @@ public class Item3D : MonoBehaviour, IItemVisual
 
     public void Select()
     {
-        //if (selectedButton != null) selectedButton.Deselect();
-        ////todo change gamemanage.inst.SelectItem(item) to item.Select();
-        //if (!GameManager.instance.SelectItem(item))
-        //{
-        //    selectedButton = this;
-        //    transform.GetChild(1).GetComponent<ParticleSystem>().Play(true);
-        //}
-        //else
-        //{
-        //    selectedButton = null;
-        //}
+        if (Application.platform == RuntimePlatform.WindowsEditor)
+        {
+            if (selectedButton != null) selectedButton.Deselect();
+            //todo change gamemanage.inst.SelectItem(item) to item.Select();
+            if (!GameManager.instance.SelectItem(item))
+            {
+                selectedButton = this;
+                transform.GetChild(1).GetComponent<ParticleSystem>().Play(true);
+            }
+            else
+            {
+                selectedButton = null;
+            }
+            return;
+        }
         selectedButton = this;
         transform.GetChild(1).GetComponent<ParticleSystem>().Play(true);
     }
