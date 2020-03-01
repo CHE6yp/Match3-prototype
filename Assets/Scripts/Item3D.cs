@@ -95,7 +95,7 @@ public class Item3D : MonoBehaviour, IItemVisual
         while (anim.isPlaying)
             yield return null;
 
-        GameManager.instance.coroutineCounter--;
+        GameManager.instance.dropCounter--;
 
         //anim.RemoveClip("tmp");
         //anim.AddClip(clip, clip.name);

@@ -13,6 +13,15 @@ public class GameManager : MonoBehaviour
 
     public int coroutineCounter;
 
+    private int _dropCounter = 0;
+    public int dropCounter { get { return _dropCounter; }
+        set {
+            _dropCounter = value;
+            if (_dropCounter == 0)
+                field.CheckMatches();
+        }
+    }
+
     public float itemInterval = 3; //AAAAAAAAR TODO GET THIS SHIT FIGURED OUT
 
     public float coroutineFrames = 25;
@@ -44,7 +53,7 @@ public class GameManager : MonoBehaviour
         }
         field.itemsSwitched += (from, to) => { StartCoroutine(SwitchItems(from.visualObject, to.visualObject)); };
         field.scoredMatches += (matches) => { StartCoroutine(ScoreMatches(matches)); };
-        field.droppedItems += () => StartCoroutine(DropItems());
+        field.droppedItems += DropItems;
         //TODO move somewhere somehow
         field.scoreChanged += () => {
             UIManager.instance.scoreText.text = "$" + field.score;
@@ -121,15 +130,12 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    IEnumerator DropItems()
+    void DropItems()
     {
-        coroutineCounter = field.Items.Count;
+        dropCounter = field.Items.Count;
         foreach (Item item in field.Items)
         {
             StartCoroutine(item.visualObject.Drop());
         }
-        while (coroutineCounter > 0) yield return null;
-
-        field.CheckMatches();
     }
 }

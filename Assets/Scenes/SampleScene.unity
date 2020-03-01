@@ -351,7 +351,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca1f7ee337c59184da30faa46994c2f7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  buttonPrefab: {fileID: 902158058789332027, guid: b6f7cfc677e0f4446805e1f422cb45b4,
+  itemVisualPrefab: {fileID: 902158058789332027, guid: b6f7cfc677e0f4446805e1f422cb45b4,
     type: 3}
   selectedItem:
     type: 
