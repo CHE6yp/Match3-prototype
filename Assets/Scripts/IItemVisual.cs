@@ -12,7 +12,7 @@ public interface IItemVisual
     void Deselect();
     void UpdateLook();
     void UpdatePosition();
-    void MoveTo(Vector2 coordinates);
+    IEnumerator MoveTo(Vector2 coordinates);
     IEnumerator Drop();
     void Score();
 }

@@ -60,9 +60,40 @@ public class Item3D : MonoBehaviour, IItemVisual
     }
 
     //not really used, but let's leave it
-    public void MoveTo(Vector2 coordinates)
+    public IEnumerator MoveTo(Vector2 coordinates)
     {
-        transform.position = coordinates * interval;
+        //transform.position = coordinates * interval;
+
+        Debug.Log("slide! " + (transform.position.y / interval - item.coordinates.y).ToString());
+        //Animator animator = GetComponent<Animator>();
+        Animation anim = GetComponent<Animation>();
+        //StartCoroutine(Drop(animator));
+
+        AnimationCurve curveY, curveX;
+
+        AnimationClip clip = new AnimationClip();
+        clip.legacy = true;
+
+        Keyframe[] keysY, keysX;
+        keysX = new Keyframe[2];
+        keysY = new Keyframe[2];
+        keysY[0] = new Keyframe(0.0f, transform.position.y);
+        keysY[1] = new Keyframe(0.5f, item.coordinates.y * interval);
+        keysX[0] = new Keyframe(0.0f, transform.position.x);
+        keysX[1] = new Keyframe(0.5f, item.coordinates.x * interval);
+        //keys[2] = new Keyframe(2.0f, 0.0f);
+        curveY = new AnimationCurve(keysY);
+        curveX = new AnimationCurve(keysX);
+        clip.SetCurve("", typeof(Transform), "localPosition.x", curveX);
+        clip.SetCurve("", typeof(Transform), "localPosition.y", curveY);
+
+        anim.AddClip(clip, "tmp");
+        anim.Play("tmp");
+        //need to wait for all animations
+        while (anim.isPlaying)
+            yield return null;
+
+        GameManager.instance.dropCounter--;
     }
 
     /// <summary>
@@ -96,11 +127,6 @@ public class Item3D : MonoBehaviour, IItemVisual
             yield return null;
 
         GameManager.instance.dropCounter--;
-
-        //anim.RemoveClip("tmp");
-        //anim.AddClip(clip, clip.name);
-        //anim.Play(clip.name);
-
     }
 
     public void Select()

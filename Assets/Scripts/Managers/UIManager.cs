@@ -47,18 +47,10 @@ public class UIManager : MonoBehaviour
 
 
     //Todo make an animation
-    public IEnumerator ScoreTextChanged()
+    public void ScoreTextChanged()
     {
-        for (int i = 0; i < 5; i++)
-        {
-            scoreText.fontSize += 10;
-            yield return new WaitForSeconds(0.02f);
-        }
-        for (int i = 0; i < 5; i++)
-        {
-            scoreText.fontSize -= 10;
-            yield return new WaitForSeconds(0.02f);
-        }
+        canvas.GetComponent<Animator>().SetTrigger(0);
+        //scoreText.fontSize -= 10;
     }
 
     public void ExitGame()

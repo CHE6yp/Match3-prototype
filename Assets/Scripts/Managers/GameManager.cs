@@ -11,7 +11,6 @@ public class GameManager : MonoBehaviour
 
     public Item selectedItem;
 
-    public int coroutineCounter;
 
     private int _dropCounter = 0;
     public int dropCounter { get { return _dropCounter; }
@@ -19,6 +18,27 @@ public class GameManager : MonoBehaviour
             _dropCounter = value;
             if (_dropCounter == 0)
                 field.CheckMatches();
+        }
+    }
+
+    private int _scoringCounter = 0;
+    public int scoringCounter
+    {
+        get { return _scoringCounter; }
+        set
+        {
+            _scoringCounter = value;
+            if (_scoringCounter == 0)
+            {
+                //get this out of here
+                foreach (Item item in field.Items)
+                {
+                    //todo make method
+                    item.visualObject.UpdatePosition();
+                    item.visualObject.UpdateLook();
+                }
+                field.DropItems();
+            }
         }
     }
 
@@ -51,13 +71,13 @@ public class GameManager : MonoBehaviour
         {
             SetupItemVisual(item);
         }
-        field.itemsSwitched += (from, to) => { StartCoroutine(SwitchItems(from.visualObject, to.visualObject)); };
-        field.scoredMatches += (matches) => { StartCoroutine(ScoreMatches(matches)); };
+        field.itemsSwitched += SwitchItems;
+        field.scoredMatches += ScoreMatches;
         field.droppedItems += DropItems;
         //TODO move somewhere somehow
         field.scoreChanged += () => {
             UIManager.instance.scoreText.text = "$" + field.score;
-            StartCoroutine(UIManager.instance.ScoreTextChanged());
+            UIManager.instance.ScoreTextChanged();
         };
     }
 
@@ -68,41 +88,24 @@ public class GameManager : MonoBehaviour
     }
 
     //Switching needs to be in IItemVisual (or not?)
-    IEnumerator SwitchItems(IItemVisual from, IItemVisual to)
+    void SwitchItems(Item from, Item to)
     {
-        Vector3 path = to.transform.position - from.transform.position;
-
-        for (int i = 0; i < coroutineFrames / 2; i++)
-        {
-            from.transform.position += path * 1 / (coroutineFrames / 2);
-            to.transform.position -= path * 1 / (coroutineFrames / 2);
-            yield return new WaitForSeconds((1 / coroutineFrames) * coroutineTime / 2);
-        }
-        field.CheckMatches();
+        dropCounter = 2;
+        StartCoroutine(from.visualObject.MoveTo(Vector2.zero));
+        StartCoroutine(to.visualObject.MoveTo(Vector2.zero));
     }
 
-    IEnumerator ScoreMatches(List<MatchData> matches)
+    void ScoreMatches(List<MatchData> matches)
     {
         Camera.main.GetComponent<AudioSource>().Play();//for now, this will do. TODO make an audioManager
-        coroutineCounter = matches.Count;
+        scoringCounter = matches.Count;
         foreach (MatchData match in matches)
         {
             StartCoroutine(ScoreMatch(match));
         }
-        while (coroutineCounter > 0) yield return null;
-
-        foreach (Item item in field.Items)
-        {
-            item.visualObject.UpdatePosition();
-            if (buildingDropInterval != 0)
-                yield return new WaitForSeconds(buildingDropInterval);
-            item.visualObject.UpdateLook();
-        }
-        yield return new WaitForSeconds(scoreToDropInterval);
-        //Here proceed to the next step
-        field.DropItems();
     }
 
+    //TODO think about this
     IEnumerator ScoreMatch(MatchData match)
     {
         foreach (Item item in match.items)
@@ -111,7 +114,7 @@ public class GameManager : MonoBehaviour
         }
 
         yield return new WaitForSeconds(coroutineTime / 2);
-        coroutineCounter--;
+        scoringCounter--;
     }
 
     //TODO DELETE THIS! Its for windows debugging now

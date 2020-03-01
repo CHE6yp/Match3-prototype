@@ -362,7 +362,6 @@ MonoBehaviour:
     checkedForMatchHorizontal: 0
     checkedForMatchVertical: 0
     fallingSteps: 0
-  coroutineCounter: 0
   itemInterval: 3
   coroutineFrames: 25
   coroutineTime: 0.5
@@ -5614,6 +5613,7 @@ GameObject:
   - component: {fileID: 900872233}
   - component: {fileID: 900872232}
   - component: {fileID: 900872230}
+  - component: {fileID: 900872231}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -5643,6 +5643,25 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
+--- !u!95 &900872231
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 900872229}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 03b82a674145b1048bf883426fc18f8b, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!223 &900872232
 Canvas:
   m_ObjectHideFlags: 0
