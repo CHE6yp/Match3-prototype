@@ -11,7 +11,7 @@ public class GameManager : MonoBehaviour
 
     public Item selectedItem;
 
-
+    //todo rename
     private int _dropCounter = 0;
     public int dropCounter { get { return _dropCounter; }
         set {
@@ -43,13 +43,6 @@ public class GameManager : MonoBehaviour
     }
 
     public float itemInterval = 3; //AAAAAAAAR TODO GET THIS SHIT FIGURED OUT
-
-    public float coroutineFrames = 25;
-    public float coroutineTime = 0.5f;
-
-    //public bool visualiseDropping = false;
-    public float buildingDropInterval = 0;
-    public float scoreToDropInterval = 0;
 
     private void Awake()
     {
@@ -113,7 +106,7 @@ public class GameManager : MonoBehaviour
             item.visualObject.Score();
         }
 
-        yield return new WaitForSeconds(coroutineTime / 2);
+        yield return new WaitForSeconds(.5f);
         scoringCounter--;
     }
 

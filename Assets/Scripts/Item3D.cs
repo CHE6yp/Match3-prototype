@@ -112,9 +112,12 @@ public class Item3D : MonoBehaviour, IItemVisual
         clip.legacy = true;
 
         Keyframe[] keys;
-        keys = new Keyframe[2];
+        keys = new Keyframe[4];
         keys[0] = new Keyframe(0.0f, transform.position.y);
-        keys[1] = new Keyframe(0.5f, item.coordinates.y*interval);
+        keys[1] = new Keyframe(0.3f, item.coordinates.y * interval - .5f);
+        keys[2] = new Keyframe(0.45f, item.coordinates.y * interval + .5f);
+        keys[3] = new Keyframe(0.5f, item.coordinates.y*interval);
+
         //keys[2] = new Keyframe(2.0f, 0.0f);
         curve = new AnimationCurve(keys);
         clip.SetCurve("", typeof(Transform), "localPosition.x", AnimationCurve.Constant(0,0,transform.position.x));
