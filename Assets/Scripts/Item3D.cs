@@ -54,10 +54,10 @@ public class Item3D : MonoBehaviour, IItemVisual
         transform.GetChild(0).GetComponent<MeshFilter>().mesh = UIManager.instance.buttonMeshes[i];
         transform.GetChild(0).GetComponent<MeshRenderer>().material = UIManager.instance.buttonMaterials[i];
 
-        transform.GetChild(1).GetComponent<ParticleSystem>().startColor = transform.GetChild(0).GetComponent<MeshRenderer>().material.color;
-        transform.GetChild(1).GetChild(0).GetComponent<ParticleSystem>().startColor = transform.GetChild(0).GetComponent<MeshRenderer>().material.color;
+        //transform.Find("Select").GetComponent<ParticleSystem>().startColor = transform.GetChild(0).GetComponent<MeshRenderer>().material.color;
+        //transform.Find("Score").GetComponent<ParticleSystem>().startColor = transform.GetChild(0).GetComponent<MeshRenderer>().material.color;
     }
-    
+
     public void UpdatePosition()
     {
         transform.position = item.coordinates * interval;
@@ -160,17 +160,17 @@ public class Item3D : MonoBehaviour, IItemVisual
             return;
         }
         selectedButton = this;
-        transform.GetChild(1).GetComponent<ParticleSystem>().Play(true);
+        transform.Find("Select").GetComponent<ParticleSystem>().Play(true);
     }
 
     public void Deselect()
     {
         selectedButton = null;
-        transform.GetChild(1).GetComponent<ParticleSystem>().Stop();
+        transform.Find("Select").GetComponent<ParticleSystem>().Stop();
     }
 
     public void Score()
     {
-        transform.GetChild(1).GetChild(0).GetComponent<ParticleSystem>().Play(true);
+        transform.Find("Score").GetComponent<ParticleSystem>().Play(true);
     }
 }
