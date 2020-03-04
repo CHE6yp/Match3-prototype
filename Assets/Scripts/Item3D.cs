@@ -101,6 +101,13 @@ public class Item3D : MonoBehaviour, IItemVisual
     /// </summary>
     public IEnumerator Drop()
     {
+        //если айтем уже где надо, то пускай не падает
+        //Это конечно хорошо, но лучше бы метод вообще не запускался когда не нужен
+        if (transform.position.y / interval == item.coordinates.y)
+        {
+            GameManager.instance.dropCounter--;
+            yield break;
+        }
         Debug.Log("Drop! "+ (transform.position.y / interval - item.coordinates.y).ToString());
         //Animator animator = GetComponent<Animator>();
         Animation anim = GetComponent<Animation>();
