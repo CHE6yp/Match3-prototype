@@ -6,7 +6,9 @@ using UnityEngine.UI;
 
 public class Item3D : MonoBehaviour, IItemVisual
 {
-    public Item item { get; set; }
+    [SerializeField]
+    private Item _item;
+    public Item item { get { return _item; } set { _item = value; } }
     public new Transform transform { get; private set; }
 
     public static Item3D selectedButton;
@@ -27,6 +29,8 @@ public class Item3D : MonoBehaviour, IItemVisual
         UpdatePosition();
 
         UpdateLook();
+
+        //item.dropped += () => StartCoroutine(Drop());
 
         //buttonComponent.onClick.AddListener(Select);
 
@@ -103,12 +107,11 @@ public class Item3D : MonoBehaviour, IItemVisual
     {
         //если айтем уже где надо, то пускай не падает
         //Это конечно хорошо, но лучше бы метод вообще не запускался когда не нужен
-        if (transform.position.y / interval == item.coordinates.y)
+        if (transform.position.y / interval == item.coordinates.y && false)
         {
             GameManager.instance.dropCounter--;
             yield break;
         }
-        Debug.Log("Drop! "+ (transform.position.y / interval - item.coordinates.y).ToString());
         //Animator animator = GetComponent<Animator>();
         Animation anim = GetComponent<Animation>();
         //StartCoroutine(Drop(animator));
@@ -147,7 +150,7 @@ public class Item3D : MonoBehaviour, IItemVisual
             //todo change gamemanage.inst.SelectItem(item) to item.Select();
             if (!GameManager.instance.SelectItem(item))
             {
-                selectedButton = this;
+                selectedButton = this; 
                 transform.GetChild(1).GetComponent<ParticleSystem>().Play(true);
             }
             else

@@ -49,7 +49,7 @@ public class UIManager : MonoBehaviour
     //Todo make an animation
     public void ScoreTextChanged()
     {
-        canvas.GetComponent<Animator>().SetTrigger(0);
+        canvas.GetComponent<Animator>().SetTrigger("scoreChanged");
         //scoreText.fontSize -= 10;
     }
 

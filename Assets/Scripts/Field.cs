@@ -18,12 +18,15 @@ public class Field : IField
 
     public delegate void FieldEvent();
     public event FieldEvent checkedMatches;
-    public FieldEvent droppedItems;
+    public delegate void FieldItemSetEvent(List<Item> items);
+    public FieldItemSetEvent droppedItems;
     public FieldEvent scoreChanged;
     public delegate void SwitchItemsEvent(Item from, Item to);
     public SwitchItemsEvent itemsSwitched;
     public delegate void ScoredMatchesEvent(List<MatchData> matches);
     public ScoredMatchesEvent scoredMatches;
+
+    List<Vector2> l;
 
     public Item this[int x, int y]
     {
@@ -91,7 +94,6 @@ public class Field : IField
             items.Any((i) => i.coordinates == coordinates - new Vector2(2, 0)) &&
             items.Where((i) => i.coordinates == coordinates - new Vector2(2, 0)).First().type == type))
         {
-            Debug.Log("fofo");
             return CreateItem(Random.Range(0, 5), coordinates);
         }
             
@@ -226,11 +228,13 @@ public class Field : IField
 
     public void DropItems()
     {
-        foreach (Item item in items)
+        List<Item> itemsToDrop = items.Where(it =>  l.Any(coord => coord.x == it.coordinates.x && coord.y < it.coordinates.y)).ToList();
+        foreach (Item item in itemsToDrop)
         {
             item.Drop();
         }
-        droppedItems?.Invoke();
+        Debug.Log("Dropped items: " + itemsToDrop.Count());
+        droppedItems?.Invoke(itemsToDrop);
     }
 
     void ScoreMatches(List<MatchData> matches)
@@ -242,8 +246,22 @@ public class Field : IField
             match.ScoreMatch();
             scoredItems.AddRange(match.items);
         }
+        l = new List<Vector2>();
         foreach (Item item in scoredItems)
+        {
+            IEnumerable<Vector2> droping = l.Where((v) => v.x == item.coordinates.x);
+            if (droping.Count() == 0)
+                l.Add(item.coordinates);
+            else
+            {
+                Vector2 current = l.Where((v) => v.x == item.coordinates.x).FirstOrDefault();
+                if (current.y > item.coordinates.y)
+                {
+                    l[l.IndexOf(current)] = item.coordinates;
+                }
+            }
             item.MoveTo(new Vector2(item.coordinates.x, Field.instance.height - 1 + item.fallingSteps));
+        }
         foreach (Item item in scoredItems)
             item.fallingSteps = scoredItems.Where((a) => (a.coordinates.x == item.coordinates.x)).Count();
 

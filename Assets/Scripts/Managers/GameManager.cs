@@ -126,10 +126,10 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    void DropItems()
+    void DropItems(List<Item> itemsToDrop)
     {
-        dropCounter = field.Items.Count;
-        foreach (Item item in field.Items)
+        dropCounter = itemsToDrop.Count;
+        foreach (Item item in itemsToDrop)
         {
             StartCoroutine(item.visualObject.Drop());
         }

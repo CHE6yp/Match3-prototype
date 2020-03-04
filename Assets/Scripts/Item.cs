@@ -79,6 +79,7 @@ public class Item
     {
         coordinates -= new Vector2(0, fallingSteps);
         fallingSteps = 0;
+        dropped?.Invoke();
     }
 
     public void Score()
