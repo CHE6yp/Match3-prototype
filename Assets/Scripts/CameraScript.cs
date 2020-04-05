@@ -5,6 +5,7 @@ using UnityEngine;
 public class CameraScript : MonoBehaviour
 {
     public float margin = 5;
+    public GameObject background;
 
     // Use this for initialization
     void Start()
